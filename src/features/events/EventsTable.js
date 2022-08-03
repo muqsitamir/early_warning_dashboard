@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {
     Chip,
     Paper,
@@ -10,45 +10,37 @@ import {
     TablePagination,
     TableRow
 } from "@mui/material";
-import {useDispatch} from "react-redux";
-import {useEffect} from "@types/react";
-import {getOrganization} from "../organization/organizationSlice";
-import {getEvents} from "./eventsSlice";
+import {useDispatch, useSelector} from "react-redux";
+import {getEvents, selectEvents} from "./eventsSlice";
+import {selectFilters, setFilterApplied} from "../filters/filterSlice";
 
-export function EventTable(props){
+export function EventsTable(){
 
     const [state, setState] = useState({page: 0, rowsPerPage: 10});
-    const { getEventTable, start_date, end_date, event_table} = props;
+    const {results: events, count} = useSelector(selectEvents);
+    const filters = useSelector(selectFilters);
+
     const dispatch = useDispatch();
     useEffect(() => {
-        dispatch(getEvents())
-    })
-    const componentDidMount = () => {
-        getEventTable(start_date, end_date, (state.page + 1))
-    }
-    const componentDidUpdate = (prevProps, prevState, snapshot) => {
-        if (prevProps.start_date !== start_date || prevProps.end_date !== end_date) {
-            getEventTable( start_date, end_date, 1)
-            setState({page: 0});
-        }
-    }
+        dispatch(getEvents(state.page + 1, filters.filterApplied));
+        let check = filters.filterApplied ? false : filters.filterApplied;
+        dispatch(setFilterApplied(check));
+    }, [filters])
+
 
     const handleChangePage = (event, newPage) => {
         if (newPage > state.page)
-            getEventTable( start_date, end_date, (newPage + 1))
-        setState({page: newPage});
+            dispatch(getEvents(newPage + 1, filters.filterApplied));
+        setState({page: newPage, rowsPerPage: state.rowsPerPage});
     };
 
     const handleChangeRowsPerPage = (event) => {
-        setState({rowsPerPage: parseInt(event.target.value, 10)});
-        setState({page: 0});
+        setState({rowsPerPage: parseInt(event.target.value, 10), page: 0});
     };
-
     const {page, rowsPerPage} = state;
-
     return (
             <Paper className="mb4">
-                <TableContainer style={{maxHeight: 500}}>
+                <TableContainer style={{maxHeight: 1200}}>
                     <Table size="small" stickyHeader aria-label="sticky table">
                         <TableHead>
                             <TableRow>
@@ -59,17 +51,16 @@ export function EventTable(props){
                             </TableRow>
                         </TableHead>
 
-                        {event_table.results.length !== 0 ?
+                        {   events.length !== 0 ?
                             <TableBody>{(rowsPerPage > 0
-                                    ? event_table.results.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                                    : event_table.results
+                                    ? events.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                                    : events
                             ).map((row) => {
-
                                 return <TableRow key={row.uuid}>
                                     <TableCell>
-                                        <a target="_blank" href={row.file.replace("http://127.0.0.1:8000/media", "https://tpilums.org.pk/media")}>
+                                        <a target="_blank" href={row.file}>
                                         <img
-                                            src={row.thumbnail.replace("http://127.0.0.1:8000/media", "https://tpilums.org.pk/media")}
+                                            src={row.thumbnail}
                                             height={80}/>
                                         </a>
                                     </TableCell>
@@ -97,11 +88,11 @@ export function EventTable(props){
                 <TablePagination
                     rowsPerPageOptions={[]}
                     component="div"
-                    count={event_table.count !== null ? event_table.count : "loading..."}
+                    count={count !== null ? count : "loading..."}
                     rowsPerPage={rowsPerPage}
                     page={page}
-                    onChangePage={handleChangePage}
-                    onChangeRowsPerPage={handleChangeRowsPerPage}/>
+                    onRowsPerPageChange={handleChangeRowsPerPage}
+                    onPageChange = {handleChangePage}/>
             </Paper>
         );
 }

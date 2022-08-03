@@ -1,28 +1,41 @@
 import { createSlice } from '@reduxjs/toolkit'
+import axios from "axios";
 
 
-export const filterSlice = createSlice({
-  name: 'filters',
+export const organizationSlice = createSlice({
+  name: 'organization',
   initialState: {
-    range: {
-      startDate: null,
-      endDate: new Date(),
-      key: 'range'
-    },
-    cameras: [],
-    species: []
+      organization: {
+          cameras: [],
+          species: []
+      },
   },
   reducers: {
-      setDateRange: (state, action) => {
-          state.range = action.payload.range
+      setOrganization: (state, action) => {
+          state.organization = action.payload
       },
   },
 })
 
+const Header = {};
+export const getOrganization = () => dispatch => {
+    Header['Authorization'] = `Token ${localStorage.getItem("token")}`;
+    let config = {
+        headers: Header,
+    };
+    axios.get('https://tpilums.org.pk/core/api/organization/', config).then((res) => {
+        dispatch(setOrganization(res.data));
+    }).catch((err) => {
+
+    }).finally(() => {
+
+    })
+}
+
+
+
 // Action creators are generated for each case reducer function
-export const { setDateRange } = filterSlice.actions
-export const selectFilters = (state) => state.filters;
-
-
-export default filterSlice.reducer
+export const { setOrganization } = organizationSlice.actions
+export const selectOrganization = (state) => state.organization.organization;
+export default organizationSlice.reducer
 

@@ -1,28 +1,14 @@
 import { DateRange } from 'react-date-range';
+import 'react-date-range/dist/styles.css'; // main style file
+import 'react-date-range/dist/theme/default.css'; // theme css file
 
-
-export default function DatePicker() {
-    const handleSelect = (ranges) => {
-    console.log(ranges);
-    // {
-    //   selection: {
-    //     startDate: [native Date Object],
-    //     endDate: [native Date Object],
-    //   }
-    // }
-    }
-    const selectionRange = {
-      startDate: new Date(),
-      endDate: new Date(),
-      key: 'selection',
-    }
-
+export default function DatePicker(props) {
 
     return (
       <div className="center tc pv3 ph2">
         <DateRange
-        ranges={[selectionRange]}
-        onChange={handleSelect}
+        ranges={[props.ranges]}
+        onChange={props.onChange}
         />
         </div>
     );

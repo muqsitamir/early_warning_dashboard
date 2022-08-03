@@ -1,30 +1,44 @@
 import { createSlice } from '@reduxjs/toolkit'
 import axios from "axios";
+import {selectFilters} from "../filters/filterSlice";
 
 
-export const organizationSlice = createSlice({
-  name: 'organization',
+
+
+export const eventsSlice = createSlice({
+  name: 'events',
   initialState: {
-      organization: {
-          cameras: [],
-          species: []
+      events: {
+          "count": 0,
+          "next": null,
+          "previous": null,
+          "results": []
       },
   },
   reducers: {
-      setOrganization: (state, action) => {
-          state.organization = action.payload
+      setEvents: (state, action) => {
+          state.events.count = action.payload.count;
+          state.events.next = action.payload.next;
+          state.events.previous = action.payload.previous;
+          state.events.results = action.payload.filterApplied ? action.payload.results : state.events.results.concat(action.payload.results);
       },
   },
 })
 
 const Header = {};
-export const getOrganization = () => dispatch => {
+export const getEvents= (page, filterApplied) => (dispatch, getState) => {
     Header['Authorization'] = `Token ${localStorage.getItem("token")}`;
     let config = {
         headers: Header,
     };
-    axios.get('https://tpilums.org.pk/core/api/organization/', config).then((res) => {
-        dispatch(setOrganization(res.data));
+    const {range, cameras, species} = selectFilters(getState());
+    let start_date = range.startDate ? range.startDate.getFullYear() + '-' + (range.startDate.getMonth() + 1) + '-' + range.startDate.getDate() : '';
+    let end_date = range.endDate.getFullYear() + '-' + (range.endDate.getMonth() + 1) + '-' + range.endDate.getDate();
+    let cameras_selected = cameras.join(',');
+    let species_selected = species.join(',');
+    axios.get(`https://tpilums.org.pk/core/api/event/?date_gte=${start_date}&date_lte=${end_date}&cameras=${cameras_selected}&species=${species_selected}&page=${page}`, config).then((res) => {
+        res.data["filterApplied"] = filterApplied;
+        dispatch(setEvents(res.data));
     }).catch((err) => {
 
     }).finally(() => {
@@ -35,7 +49,7 @@ export const getOrganization = () => dispatch => {
 
 
 // Action creators are generated for each case reducer function
-export const { setOrganization } = organizationSlice.actions
-export const selectOrganization = (state) => state.organization.organization;
-export default organizationSlice.reducer
+export const { setEvents } = eventsSlice.actions
+export const selectEvents = (state) => state.events.events;
+export default eventsSlice.reducer
 

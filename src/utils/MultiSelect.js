@@ -2,21 +2,20 @@ import React from "react";
 import {MenuItem, TextField} from "@mui/material";
 
 
-export default function MultiSelect(){
-      <TextField
-    select
-    name="userRoles"
-    id="userRoles"
-    variant="outlined"
-    label="userRoles"
-    SelectProps={{
-      multiple: true,
-      value: [],
-      onChange: ()=>{}
-    }}
-  >
-    <MenuItem value="admin">Admin</MenuItem>
-    <MenuItem value="user1">User1</MenuItem>
-    <MenuItem value="user2">User2</MenuItem>
-  </TextField>
+export default function MultiSelect(props){
+    const { label, items, values, onChange} = props
+    return(
+        <TextField
+        select
+        variant = "outlined"
+        label = {label}
+        SelectProps={{
+          multiple: true,
+          value: values,
+          onChange: onChange
+        }}
+        >
+            {items.map((v, i)=>(<MenuItem value={v.key}>{v.value}</MenuItem>))}
+        </TextField>
+    );
 }

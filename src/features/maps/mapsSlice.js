@@ -2,11 +2,13 @@ import {createSlice} from '@reduxjs/toolkit'
 import axios from "axios";
 
 
-export const mapSlice = createSlice({
-  name: 'map',
-  initialState: null,
+export const mapsSlice = createSlice({
+  name: 'maps',
+  initialState: {
+      maps:null
+  },
   reducers: {
-      setLineChart: (state, action) => {
+      setMaps: (state, action) => {
           state.maps = action.payload.results
       },
   },
@@ -14,19 +16,14 @@ export const mapSlice = createSlice({
 
 const Header = {};
 
-export const getMaps = (start_date, end_date) => dispatch => {
+export const getCameraNodes = () => dispatch => {
     Header["Authorization"] = `Token ${localStorage.getItem("token")}`;
     // dispatch(showLoadingScreen(true));
     let config = {
         headers: Header,
-        params: {
-            image__date__gte: start_date,
-            image__date__lte: end_date,
-        },
     };
-    axios.get("https://tpilums.org.pk/core/api/box/linechart/", config).then(res => {
-        debugger;
-        dispatch(setLineChart(res.data));
+    axios.get("https://tpilums.org.pk/core/api/camera/", config).then(res => {
+        dispatch(setMaps(res.data));
     }).catch(err => {
 
     }).finally(() => {
@@ -36,6 +33,6 @@ export const getMaps = (start_date, end_date) => dispatch => {
 
 
 // Action creators are generated for each case reducer function
-export const { setLineChart } = lineChartSlice.actions
-export const selectLineChart = (state) => state.line_chart;
-export default lineChartSlice.reducer
+export const { setMaps } = mapsSlice.actions
+export const selectMaps = (state) => state.maps.maps;
+export default mapsSlice.reducer
