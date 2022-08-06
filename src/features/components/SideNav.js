@@ -13,20 +13,8 @@ export default function SideNav(){
                                 <span>Home</span>
                             </Link>
                         </li>
-                        {/*<li className={"item"}>*/}
-                        {/*    <Link className="db text-decoration-none" to="#">*/}
-                        {/*        <i className="material-icons-outlined v-mid mr2">person</i>*/}
-                        {/*        <span>Profile</span>*/}
-                        {/*    </Link>*/}
-                        {/*</li>*/}
-                        {/*<li className={"item"}>*/}
-                        {/*    <Link className="db text-decoration-none" to="#">*/}
-                        {/*        <i className="material-icons-outlined v-mid mr2">settings</i>*/}
-                        {/*        <span>Settings</span>*/}
-                        {/*    </Link>*/}
-                        {/*</li>*/}
                         <li className={"item"}>
-                            <Link className="db text-decoration-none" to="/logout">
+                            <Link className="db text-decoration-none" to="/logout" >
                                 <i className="material-icons-outlined v-mid mr2">lock</i>
                                 <span>Logout</span>
                             </Link>

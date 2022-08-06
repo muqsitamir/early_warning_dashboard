@@ -5,7 +5,7 @@ import eventsReducer from '../features/events/eventsSlice'
 import pieChartReducer from '../features/piechart/pieChartSlice'
 import lineChartReducer from '../features/linechart/lineChartSlice'
 import mapsReducer from '../features/maps/mapsSlice'
-
+import userReducer from '../pages/Authentication/userSlice'
 
 export const store = configureStore({
   reducer: {
@@ -15,5 +15,6 @@ export const store = configureStore({
     pie_chart: pieChartReducer,
     line_chart: lineChartReducer,
     maps: mapsReducer,
+    user: userReducer,
   },
 });

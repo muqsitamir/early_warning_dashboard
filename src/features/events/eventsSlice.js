@@ -21,7 +21,7 @@ export const eventsSlice = createSlice({
           state.events.next = action.payload.next;
           state.events.previous = action.payload.previous;
           state.events.results = action.payload.filterApplied ? action.payload.results : state.events.results.concat(action.payload.results);
-      },
+          },
   },
 })
 

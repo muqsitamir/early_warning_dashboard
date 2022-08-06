@@ -45,6 +45,6 @@ export const getLineChart = (start_date, end_date) => dispatch => {
 
 
 // Action creators are generated for each case reducer function
-export const { setLineChart } = lineChartSlice.actions
+export const { setLineChart } = lineChartSlice.actions;
 export const selectLineChart = (state) => state.line_chart;
-export default lineChartSlice.reducer
+export default lineChartSlice.reducer;
