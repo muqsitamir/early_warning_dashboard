@@ -1,5 +1,6 @@
 import {createSlice} from '@reduxjs/toolkit'
 import axios from "axios";
+import {showLoadingScreen, setSnackBar} from "../../reusable_components/site_data/siteDataSlice";
 
 
 export const mapsSlice = createSlice({
@@ -17,6 +18,7 @@ export const mapsSlice = createSlice({
 const Header = {};
 
 export const getCameraNodes = () => dispatch => {
+    dispatch(showLoadingScreen(true));
     Header["Authorization"] = `Token ${localStorage.getItem("token")}`;
     // dispatch(showLoadingScreen(true));
     let config = {
@@ -25,9 +27,9 @@ export const getCameraNodes = () => dispatch => {
     axios.get("https://tpilums.org.pk/core/api/camera/", config).then(res => {
         dispatch(setMaps(res.data));
     }).catch(err => {
-
+        dispatch(setSnackBar(err.response.data.non_field_errors[0]));
     }).finally(() => {
-
+        dispatch(showLoadingScreen(false));
     });
 };
 

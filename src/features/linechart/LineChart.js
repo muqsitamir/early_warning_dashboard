@@ -16,7 +16,6 @@ export function LineChart() {
          dispatch(getLineChart(StartD, EndD));
          }, [range])
 
-
      return (
         <div style={{
             display: 'flex',

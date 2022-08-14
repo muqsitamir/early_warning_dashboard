@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
-import { Dialog} from "@mui/material";
-import DatePicker from "../../utils/DatePicker";
+import {Dialog} from "@mui/material";
+import DatePicker from "../../reusable_components/DatePicker";
 import {useDispatch, useSelector} from "react-redux";
 import {setCameras, setDateRange, setSpecies, setFilterApplied} from "./filterSlice";
-import MultiSelect from "../../utils/MultiSelect";
+import MultiSelect from "../../reusable_components/MultiSelect";
 import {selectOrganization} from "../organization/organizationSlice";
+import FilterListIcon from '@mui/icons-material/FilterList';
 
 
 export function Filters() {
@@ -42,25 +43,23 @@ export function Filters() {
         dispatch(setSpecies(newSpecies));
         dispatch(setFilterApplied(true));
         setState({open: false});
-
     }
     return(
         <div>
             <button onClick={handleOpen} className="mdc-button mdc-top-app-bar__action-item mdc-button__ripple">
-                <i className="material-icons-outlined v-mid mr2"> Filter_List </i>
+              <FilterListIcon className='v-mid mr2'/>
                 <span>Filter</span>
             </button>
             <Dialog
                 open={state.open}
                 onClose={handleClose}
-                closeAfterTransition
-                >
-                <DatePicker ranges={newRange} onChange={handleDateChange}/>
-                <MultiSelect label={"Cameras"} onChange={handleCameraSelect} values={newCameras} items={cameraItems}  />
-                <MultiSelect label={"Species"} onChange={handleSpecieSelect} values={newSpecies} items={speciesItems}/>
-                <div className="center tc pv3 ph2">
-                    <button className="btn btn-outline-primary" onClick={handleApplyFilter}>Apply Filter</button>
-                </div>
+                closeAfterTransition>
+                        <DatePicker ranges={newRange} onChange={handleDateChange}/>
+                        <MultiSelect label={"Cameras"} onChange={handleCameraSelect} values={newCameras} items={cameraItems}  />
+                        <MultiSelect label={"Species"} onChange={handleSpecieSelect} values={newSpecies} items={speciesItems}/>
+                        <div className="center tc pv3 ph2">
+                            <button className="btn btn-outline-primary" onClick={handleApplyFilter}>Apply Filter</button>
+                        </div>
             </Dialog>
         </div>
     );

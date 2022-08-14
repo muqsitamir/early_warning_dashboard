@@ -1,5 +1,6 @@
 import {createSlice} from '@reduxjs/toolkit'
 import axios from "axios";
+import {setSnackBar, showLoadingScreen} from "../../reusable_components/site_data/siteDataSlice";
 
 
 export const lineChartSlice = createSlice({
@@ -25,6 +26,7 @@ export const lineChartSlice = createSlice({
 const Header = {};
 
 export const getLineChart = (start_date, end_date) => dispatch => {
+    dispatch(showLoadingScreen(true));
     Header["Authorization"] = `Token ${localStorage.getItem("token")}`;
     // dispatch(showLoadingScreen(true));
     let config = {
@@ -37,14 +39,14 @@ export const getLineChart = (start_date, end_date) => dispatch => {
     axios.get("https://tpilums.org.pk/core/api/box/linechart/", config).then(res => {
         dispatch(setLineChart(res.data));
     }).catch(err => {
-
+        dispatch(setSnackBar(err.response.data.non_field_errors[0]));
     }).finally(() => {
-
+        dispatch(showLoadingScreen(false));
     });
 };
 
 
 // Action creators are generated for each case reducer function
-export const { setLineChart } = lineChartSlice.actions
+export const { setLineChart } = lineChartSlice.actions;
 export const selectLineChart = (state) => state.line_chart;
-export default lineChartSlice.reducer
+export default lineChartSlice.reducer;

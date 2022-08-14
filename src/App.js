@@ -1,92 +1,41 @@
-import React, {useEffect} from 'react';
-import './App.css';
-import {Filters} from "./features/filters/Filters";
-import {useDispatch, useSelector} from "react-redux";
-import {getOrganization} from "./features/organization/organizationSlice";
-import {EventsTable} from './features/events/EventsTable'
-import SideNav from "./features/components/SideNav";
-import {LineChart} from "./features/linechart/LineChart";
-import {PieChart} from "./features/piechart/PieChart";
-import {Maps} from "./features/maps/Maps";
+import React from 'react';
+import {Redirect, Route, Switch} from "react-router-dom"
+// import Register from "../components/Authentication/register";
+// import NewPassword from "../components/Authentication/newPassword";
+// import ResendPassword from "../components/Authentication/resendPassword";
+import MessageSnackbar from "./reusable_components/SnackBar";
+import ResetPassword from "./Authentication/ResetPassword";
+import Home from "./pages/Home";
+import ProtectedRoute from "./Authentication/ProtectedRoute";
+import Login from './Authentication/Login'
+import Logout from "./Authentication/Logout";
+import TopAppBarProtection from "./Headers/TopAppBar/TopAppBarProtection";
+import TopAppBar from "./Headers/TopAppBar/TopAppBar";
+import NotFound from "./reusable_components/NotFound";
+import ReactSpinner from "./reusable_components/ReactSpinner";
+import Cameras from "./pages/Cameras";
+import OnlyPublicRoute from "./Authentication/OnlyPublicRoute";
 
 
-function App() {
-    localStorage.setItem("token", 'cec1f9c4f9d97b72d08a0a188b27a97ca80f5a79')
-    const dispatch = useDispatch();
-    useEffect(() => {
-        dispatch(getOrganization())
-    }, [])
-
-
-  return (
-      <div className="page">
-        <div className="page__content">
-            <div className="main-wrapper">
-                <SideNav/>
-                <div className="main" style={{backgroundColor: 'var(--dark-mode-gray)', minHeight: '100vh'}}>
-                    <div className="container l mb7">
-                      <header className="row mb4 db">
-                        <div className="col s12 m6">
-                            <h2 className="bold">Dashboard</h2>
-                        </div>
-                        <div className="fr">
-                            <Filters/>
-                        </div>
-                      </header>
-                        {/*<div className="content">*/}
-                                    <div className="row">
-                                        <div className="shadow border rounded-sm db mb1">
-                                            <div className="content tc">
-                                                <div className="pa3">
-                                                    <div className="mv3">
-                                                        <LineChart/>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                     <div className="row">
-                                        <div className="col s12 m6">
-                                            <div className="shadow border rounded-sm db mb3">
-                                                <div className="content tc">
-                                                    <div className="pa3">
-                                                        <div className="mv3">
-                                                            <PieChart/>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div className="col s12 m6">
-                                            <div className="shadow border rounded-sm db mb3">
-                                                <div className="content tc">
-                                                    <div className="pa3">
-                                                        <div className="mv3">
-                                                            <Maps/>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <EventsTable/>
-
-                                    {/*{/<div className="row">/}*/}
-                                    {/*/!*    <div className="col s12">*!/*/}
-                                    {/*/!*        <h1 className="bold pb2">Loreum Ipsum</h1>*!/*/}
-                                    {/*/!*    </div>*!/*/}
-                                    {/*{/</div>/}*/}
-
-                        {/*</div>*/}
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-  );
+export default function App () {
+        return (
+            <React.Fragment>
+                <TopAppBarProtection Component={TopAppBar} />
+                <ReactSpinner/>
+                <Switch>
+                <ProtectedRoute exact path='/' Component={Home} />
+                <ProtectedRoute exact path='/cameras' Component={Cameras} />
+                <OnlyPublicRoute exact path='/login' Component={Login} />
+                <Route exact path='/logout' render={(props) => <Logout {...props}/>}/>
+                <Route path='/reset-password' render={(props) => <ResetPassword {...props}/>}/>
+                {/*    <Route exact path='/register' render={(props) => <Register {...props}/>}/>*/}
+                {/*    <Route path='/new-password/:token' render={(props) => <NewPassword {...props}/>}/>*/}
+                {/*    <Route exact path='/resend/new-password' render={(props) => <ResendPassword {...props}/>}/>*/}
+                <Route path='/not-found' component={NotFound}/>
+                <Redirect to='/not-found'/>
+                </Switch>
+                <MessageSnackbar/>
+            </React.Fragment>
+        );
 }
 
-export default App;
