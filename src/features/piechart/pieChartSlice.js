@@ -1,5 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit'
 import axios from "axios";
+import {setSnackBar, showLoadingScreen} from "../../reusable_components/site_data/siteDataSlice";
 
 
 export const pieChartSlice = createSlice({
@@ -31,6 +32,7 @@ export const pieChartSlice = createSlice({
 const Header = {};
 
 export const getPieChart = (start_date, end_date) => dispatch => {
+    dispatch(showLoadingScreen(true));
     Header["Authorization"] = `Token ${localStorage.getItem("token")}`;
     // dispatch(showLoadingScreen(true));
     let config = {
@@ -43,9 +45,9 @@ export const getPieChart = (start_date, end_date) => dispatch => {
     axios.get("https://tpilums.org.pk/core/api/box/piechart/", config).then(res => {
         dispatch(setPieChart(res.data));
     }).catch(err => {
-
+        dispatch(setSnackBar(err.response.data.non_field_errors[0]));
     }).finally(() => {
-
+        dispatch(showLoadingScreen(false));
     });
 };
 

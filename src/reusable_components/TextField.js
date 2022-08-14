@@ -4,7 +4,7 @@ function getTextWidth(value = "") {
     return (value.length * 7.66)
 }
 
-export default function Textfield(props) {
+export default function TextField(props) {
     const [state, setState] = useState({focus: false});
 
     const onFocus = (event) => {

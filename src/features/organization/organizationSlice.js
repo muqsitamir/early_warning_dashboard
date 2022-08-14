@@ -1,5 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit'
 import axios from "axios";
+import {setSnackBar, showLoadingScreen} from "../../reusable_components/site_data/siteDataSlice";
 
 
 export const organizationSlice = createSlice({
@@ -19,6 +20,7 @@ export const organizationSlice = createSlice({
 
 const Header = {};
 export const getOrganization = () => dispatch => {
+    dispatch(showLoadingScreen(true));
     Header['Authorization'] = `Token ${localStorage.getItem("token")}`;
     let config = {
         headers: Header,
@@ -26,9 +28,9 @@ export const getOrganization = () => dispatch => {
     axios.get('https://tpilums.org.pk/core/api/organization/', config).then((res) => {
         dispatch(setOrganization(res.data));
     }).catch((err) => {
-
+        dispatch(setSnackBar(err.response.data.non_field_errors[0]));
     }).finally(() => {
-
+        dispatch(showLoadingScreen(false));
     })
 }
 

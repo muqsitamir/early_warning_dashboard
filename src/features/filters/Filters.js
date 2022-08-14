@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import {Dialog} from "@mui/material";
-import DatePicker from "../../utils/DatePicker";
+import DatePicker from "../../reusable_components/DatePicker";
 import {useDispatch, useSelector} from "react-redux";
 import {setCameras, setDateRange, setSpecies, setFilterApplied} from "./filterSlice";
-import MultiSelect from "../../utils/MultiSelect";
+import MultiSelect from "../../reusable_components/MultiSelect";
 import {selectOrganization} from "../organization/organizationSlice";
 import FilterListIcon from '@mui/icons-material/FilterList';
 

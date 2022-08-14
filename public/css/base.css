@@ -442,7 +442,7 @@ template {
 }
 
 .main-wrapper .side-menu-panel {
-    width: 280px;
+    width: 200px;
     background: var(--white);
     bottom: 0;
     height: 100%;
@@ -468,11 +468,11 @@ template {
     padding-top: 64px;
 }
 
-@media (max-width: 1024px) {
-    .main-wrapper .side-menu-panel {
-        -webkit-transform: translateX(-100%);
-        transform: translateX(-100%);
-    }
+/*@media (max-width: 1024px) {*/
+/*    .main-wrapper .side-menu-panel {*/
+/*        -webkit-transform: translateX(-100%);*/
+/*        transform: translateX(-100%);*/
+/*    }*/
 }
 
 .main-wrapper .main {
@@ -1143,4 +1143,21 @@ template {
     top: 30%;
     z-index: 100;
     position: absolute;
+}
+
+.camera-info{
+    border-bottom: groove;
+    margin-top: 10px;
+    margin-right: 10px;
+    margin-left: 10px;
+}
+
+.camera-sub-info{
+    margin-left:20%;
+}
+
+
+.notfound{
+    display: flex;
+    justify-content: center;
 }

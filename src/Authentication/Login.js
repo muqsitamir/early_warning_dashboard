@@ -1,11 +1,11 @@
 import React from "react";
 import {Link} from "react-router-dom";
-import Textfield from "../../utils/TextField";
-import Form from "../../utils/Form";
+import Textfield from "../reusable_components/TextField";
+import Form from "../reusable_components/Form";
 import Joi from 'joi-browser';
+import axios from "axios";
 import {connect} from "react-redux";
-import {login} from './userSlice'
-
+import {showLoadingScreen, setSnackBar, resetSnackBar} from "../reusable_components/site_data/siteDataSlice";
 
 class Login extends Form {
 
@@ -39,13 +39,28 @@ class Login extends Form {
         })
     };
 
+    login = (user, props) => {
+        this.props.showLoadingScreen(true);
+        const Header = {};
+        axios.post("https://tpilums.org.pk/accounts/api/token/login/", user, {headers: Header}).then(res => {
+            localStorage.setItem("token", res.data.auth_token);
+            localStorage.setItem('user', JSON.stringify(res.data.user));
+            const {state} = props.location;
+            window.location = state ? state.from.pathname : "/"
+        }).catch(err => {
+            this.props.setSnackBar(err.response.data.non_field_errors[0])
+        }).finally(() => {
+            this.props.showLoadingScreen(false)
+        });
+    };
+
 
     doSubmit = (event) => {
         const user = {
             username: this.state.data.username,
             password: this.state.data.password
         };
-        this.props.login(user, this.props);
+        this.login(user, this.props);
     };
 
     render() {
@@ -57,7 +72,7 @@ class Login extends Form {
 
                             {/* */}
                             <div className="mb4 mt3">
-                                <img className="w-20 h-20" src={require("../../images/wwf_logo.png")} alt=""/>
+                                <img className="w-20 h-20" src={require("../images/wwf_logo.png")} alt=""/>
                                 <h4>Sign in to your account</h4>
                             </div>
                             {/* */}
@@ -133,8 +148,10 @@ class Login extends Form {
     }
 }
 
+
 const mapStateToProps = state => ({
-    loginStatus: state.user,
+    loginStatus: state.site_data,
+    // error: state.authentication.error
 });
 
-export default connect(mapStateToProps, {login})(Login);
+export default connect(mapStateToProps, {showLoadingScreen, setSnackBar, resetSnackBar})(Login);

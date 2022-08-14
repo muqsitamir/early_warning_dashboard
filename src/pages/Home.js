@@ -2,9 +2,10 @@ import React, {useEffect} from 'react';
 import '../App.css';
 import {Filters} from "../features/filters/Filters";
 import {useDispatch, useSelector} from "react-redux";
+import {selectSiteData} from "../reusable_components/site_data/siteDataSlice";
 import {getOrganization} from "../features/organization/organizationSlice";
 import {EventsTable} from '../features/events/EventsTable'
-import SideNav from "../features/components/SideNav";
+import SideNav from "../Headers/SideNav/SideNav";
 import {LineChart} from "../features/linechart/LineChart";
 import {PieChart} from "../features/piechart/PieChart";
 import {Maps} from "../features/maps/Maps";
@@ -14,12 +15,14 @@ export default function Home() {
     const dispatch = useDispatch();
     useEffect(() => {
         dispatch(getOrganization())
-    }, [])
+    }, []);
+    const { side_nav: side_nav_check } = useSelector(selectSiteData);
+    let side_nav = side_nav_check ? <SideNav/> : null;
     return (
       <div className="page">
         <div className="page__content">
             <div className="main-wrapper">
-                <SideNav/>
+                {side_nav}
                 <div className="main" style={{backgroundColor: 'var(--dark-mode-gray)', minHeight: '100vh'}}>
                     <div className="container l mb7">
                       <header className="row mb4 db">
