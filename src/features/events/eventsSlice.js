@@ -38,7 +38,7 @@ export const getEvents= (page, filterApplied) => (dispatch, getState) => {
     let end_date = range.endDate.getFullYear() + '-' + (range.endDate.getMonth() + 1) + '-' + range.endDate.getDate();
     let cameras_selected = cameras.join(',');
     let species_selected = species.join(',');
-    axios.get(`https://tpilums.org.pk/core/api/event/?date_gte=${start_date}&date_lte=${end_date}&cameras=${cameras_selected}&species=${species_selected}&page=${page}`, config).then((res) => {
+    axios.get(`https://api.tpilums.org.pk/core/api/event/?date_gte=${start_date}&date_lte=${end_date}&cameras=${cameras_selected}&species=${species_selected}&page=${page}`, config).then((res) => {
         res.data["filterApplied"] = filterApplied;
         dispatch(setEvents(res.data));
     }).catch((err) => {

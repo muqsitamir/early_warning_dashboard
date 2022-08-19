@@ -36,7 +36,7 @@ export const getLineChart = (start_date, end_date) => dispatch => {
             image__date__lte: end_date,
         },
     };
-    axios.get("https://tpilums.org.pk/core/api/box/linechart/", config).then(res => {
+    axios.get("https://api.tpilums.org.pk/core/api/box/linechart/", config).then(res => {
         dispatch(setLineChart(res.data));
     }).catch(err => {
         dispatch(setSnackBar(err.response.data.non_field_errors[0]));

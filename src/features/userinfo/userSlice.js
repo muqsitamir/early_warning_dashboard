@@ -32,7 +32,7 @@
 // export const getUserInfo = (user, props) => dispatch => {
 //         dispatch(showLoadingScreen(true));
 //         const Header = {};
-//         axios.post("https://tpilums.org.pk/accounts/api/token/login/", user, {headers: Header}).then(res => {
+//         axios.post("https://api.tpilums.org.pk/accounts/api/token/login/", user, {headers: Header}).then(res => {
 //             localStorage.setItem('user', JSON.stringify(res.data.user));
 //             const {state} = props.location;
 //             window.location = state ? state.from.pathname : "/"
