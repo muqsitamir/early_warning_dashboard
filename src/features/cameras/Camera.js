@@ -19,10 +19,13 @@ export default function Camera(props){
               m: 2,
               width: 360,
               height: 510,
+              '&:hover': {
+                opacity: [0.9, 0.8, 0.7],
+              },
             },
           }}
         >
-          <Paper elevation={4} >
+          <Paper elevation={4} sx={{overflow: 'auto'}} >
                 <div style={{position:"relative"}}>
                     <FiberManualRecordIcon color={live} sx={{position: 'absolute', top:10, right:10, bottom:0 }} />
                 </div>
