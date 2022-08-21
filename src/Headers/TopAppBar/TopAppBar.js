@@ -1,5 +1,5 @@
 import React from "react";
-import {Link, Redirect} from "react-router-dom";
+import { Link } from "react-router-dom";
 import MenuIcon from '@mui/icons-material/Menu';
 import { showSideNav } from '../../reusable_components/site_data/siteDataSlice'
 import { useDispatch } from "react-redux";
@@ -28,19 +28,19 @@ export default function TopAppBar(){
                 </section>
                 <section className="mdc-top-app-bar__section app-shop mdc-top-app-bar__section--align-end mr4"
                          role="toolbar">
-                    {/*<Link to="/" className="show-lg link-mute">*/}
+                    <Link to="/" className="show-lg link-mute">
                         <button className="mdc-button mdc-theme--primary mdc-top-app-bar__action-item" >
                             <span className="mdc-button__ripple"/>
                             <span className="mdc-button__label">Home</span>
                         </button>
-                    {/*</Link>*/}
+                    </Link>
                     {/*<Link to="/cameras" className="show-lg link-mute">*/}
                         <button className="mdc-button mdc-theme--primary mdc-top-app-bar__action-item" onClick={handle_camera_click}>
                             <span className="mdc-button__ripple"/>
                             <span className="mdc-button__label">Cameras</span>
                         </button>
                     {/*</Link>*/}
-                    <a href="/admin/" class="show-lg link-mute">
+                    <a href="https://api.tpilums.org.pk/admin" className="show-lg link-mute">
                         <button className="mdc-button mdc-theme--primary mdc-top-app-bar__action-item">
                             <span className="mdc-button__ripple"/>
                             <span className="mdc-button__label">Admin</span>
