@@ -47,7 +47,7 @@ export default function TopAppBar(){
                         </button>
                     </a>
                     <button
-                        className="material-icons mdc-theme--primary mdc-top-app-bar__navigation-icon mdc-icon-button dn-l js-trigger-mdc-drawer"
+                        className="menu-mobile material-icons mdc-theme--primary mdc-top-app-bar__navigation-icon mdc-icon-button dn-l js-trigger-mdc-drawer"
                         aria-label="Open navigation menu">menu
                     </button>
                 </section>

@@ -4051,3 +4051,22 @@ ul.store-categories a:hover {
 {
     background-color: var(--white);
 }
+
+.grid-div
+{
+    margin-left: 20px;
+    margin-right: 33px;
+    padding-left: 10%;
+    padding-right: 0px;
+}
+
+@media screen and (max-width: 480px) {
+  .grid-div{
+    margin-left: 4px;
+    padding-left: 4px;/* The width is 100%, when the viewport is 800px or smaller */
+  }
+  .menu-mobile{
+      margin-right: 10px;
+  }
+}
+

@@ -26,12 +26,10 @@ export default function Cameras() {
                             <h1 className="bold">Cameras</h1>
                         </div>
                     </header>
-                    <div style={{marginLeft: 20, marginRight: 30, paddingLeft:100, paddingRight: 100}}>
+                    <div className='grid-div-mobile grid-div'>
                         <Grid container justify="center" spacing={2}>
                             {cameras.map((camera) => (
-                                <Grid item xs={12} sm={6} md={4} lg={3}>
-                                    <Camera content={camera}/>
-                                </Grid>
+                                <Camera content={camera}/>
                             ))}
                         </Grid>
                     </div>
