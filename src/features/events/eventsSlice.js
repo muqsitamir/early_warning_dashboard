@@ -40,7 +40,6 @@ export const getEvents= (page, filterApplied) => (dispatch, getState) => {
     let end_ts =  "T" + endTime.getHours() + "%3A" + endTime.getMinutes() + "%3A" + endTime.getSeconds() ;
     let cameras_selected = cameras.join(',');
     let species_selected = species.join(',');
-    debugger;
     axios.get(`http://127.0.0.1:8000/core/api/event/?datetime_after=${start_date}${start_ts}&datetime_before=${end_date}${end_ts}&cameras=${cameras_selected}&species=${species_selected}&page=${page}`, config).then((res) => {
         res.data["filterApplied"] = filterApplied;
         dispatch(setEvents(res.data));

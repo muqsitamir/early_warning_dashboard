@@ -65,7 +65,7 @@ export function Filters() {
                 open={state.open}
                 onClose={handleClose}
                 closeAfterTransition>
-                        <DatePicker ranges={newRange} onChange={handleDateChange}/>
+                        <DatePicker ranges={newRange} onChange={handleDateChange} sx={{marginBottom:0}}/>
                          <LocalizationProvider dateAdapter={AdapterDateFns}>
                              <Stack spacing={2}>
                                 <DesktopTimePicker
@@ -78,7 +78,7 @@ export function Filters() {
                                   label="End Date Time"
                                   value={endTime}
                                   onChange={handleEndTimeChange}
-                                  renderInput={(params) => <TextField type="text"{...params} />}
+                                  renderInput={(params) => <TextField sx={{height:40}} {...params} />}
                                 />
                              </Stack>
                          </LocalizationProvider>

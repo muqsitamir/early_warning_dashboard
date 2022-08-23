@@ -15,7 +15,6 @@ export const pieChartSlice = createSlice({
   },
   reducers: {
       setPieChart: (state, action) => {
-          debugger;
           state.pie_chart = {
             labels: action.payload.labels,
             datasets: [
@@ -42,7 +41,6 @@ export const getPieChart = (start_date, end_date) => dispatch => {
     axios.get(`http://127.0.0.1:8000/core/api/box/piechart/?image__date__gte=${start_date}&image__date__lte=${end_date}`, config).then(res => {
         dispatch(setPieChart(res.data));
     }).catch(err => {
-        debugger;
         dispatch(setSnackBar(err.response.data.non_field_errors[0]));
     }).finally(() => {
         dispatch(showLoadingScreen(false));

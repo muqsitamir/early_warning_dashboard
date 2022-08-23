@@ -19,8 +19,8 @@ export function EventsTable(){
     const [state, setState] = useState({page: 0, rowsPerPage: 10});
     const {results: events, count} = useSelector(selectEvents);
     const filters = useSelector(selectFilters);
-
     const dispatch = useDispatch();
+    debugger;
     useEffect(() => {
         dispatch(getEvents(state.page + 1, filters.filterApplied));
         let check = filters.filterApplied ? false : filters.filterApplied;
@@ -47,6 +47,8 @@ export function EventsTable(){
                                 <TableCell>Event</TableCell>
                                 <TableCell>Specie</TableCell>
                                 <TableCell>Created At</TableCell>
+                                <TableCell>Updated At</TableCell>
+                                <TableCell>Date</TableCell>
                                 <TableCell>Camera</TableCell>
                             </TableRow>
                         </TableHead>
@@ -56,6 +58,7 @@ export function EventsTable(){
                                     ? events.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                                     : events
                             ).map((row) => {
+                                // debugger;
                                 return <TableRow key={row.uuid}>
                                     <TableCell>
                                         <a target="_blank" href={row.file}>
@@ -76,6 +79,12 @@ export function EventsTable(){
                                     </TableCell>
                                     <TableCell>
                                         {row.created_at}
+                                    </TableCell>
+                                    <TableCell>
+                                        {row.updated_at}
+                                    </TableCell>
+                                    <TableCell>
+                                        {row.date}
                                     </TableCell>
                                     <TableCell>
                                         {row.camera_name}
