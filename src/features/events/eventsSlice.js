@@ -33,12 +33,15 @@ export const getEvents= (page, filterApplied) => (dispatch, getState) => {
     let config = {
         headers: Header,
     };
-    const {range, cameras, species} = selectFilters(getState());
+    const {range, cameras, species, startTime, endTime} = selectFilters(getState());
     let start_date = range.startDate ? range.startDate.getFullYear() + '-' + (range.startDate.getMonth() + 1) + '-' + range.startDate.getDate() : '';
+    let start_ts = start_date == "" ? "" : "T" + startTime.getHours() + "%3A" + startTime.getMinutes() + "%3A" + startTime.getSeconds() ;
     let end_date = range.endDate.getFullYear() + '-' + (range.endDate.getMonth() + 1) + '-' + range.endDate.getDate();
+    let end_ts =  "T" + endTime.getHours() + "%3A" + endTime.getMinutes() + "%3A" + endTime.getSeconds() ;
     let cameras_selected = cameras.join(',');
     let species_selected = species.join(',');
-    axios.get(`https://api.tpilums.org.pk/core/api/event/?date_gte=${start_date}&date_lte=${end_date}&cameras=${cameras_selected}&species=${species_selected}&page=${page}`, config).then((res) => {
+    debugger;
+    axios.get(`http://127.0.0.1:8000/core/api/event/?datetime_after=${start_date}${start_ts}&datetime_before=${end_date}${end_ts}&cameras=${cameras_selected}&species=${species_selected}&page=${page}`, config).then((res) => {
         res.data["filterApplied"] = filterApplied;
         dispatch(setEvents(res.data));
     }).catch((err) => {

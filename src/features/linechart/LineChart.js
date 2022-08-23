@@ -8,12 +8,14 @@ Chart.register(CategoryScale,LinearScale, PointElement, LineElement);
 
 export function LineChart() {
     const {line_chart} = useSelector(selectLineChart);
-    const {range} = useSelector(selectFilters);
+    const {range, startTime, endTime} = useSelector(selectFilters);
     const dispatch = useDispatch();
      useEffect(() => {
-         let StartD = range.startDate ? range.startDate.getFullYear() + '-' + (range.startDate.getMonth() + 1) + '-' + range.startDate.getDate() : '';
-         let EndD = range.endDate.getFullYear() + '-' + (range.endDate.getMonth() + 1) + '-' + range.endDate.getDate();
-         dispatch(getLineChart(StartD, EndD));
+         let start_date = range.startDate ? range.startDate.getFullYear() + '-' + (range.startDate.getMonth() + 1) + '-' + range.startDate.getDate() : '';
+         let start_ts = start_date === "" ? "" : "T" + startTime.getHours() + "%3A" + startTime.getMinutes() + "%3A" + startTime.getSeconds() ;
+         let end_date = range.endDate.getFullYear() + '-' + (range.endDate.getMonth() + 1) + '-' + range.endDate.getDate();
+         let end_ts =  "T" + endTime.getHours() + "%3A" + endTime.getMinutes() + "%3A" + endTime.getSeconds() ;
+         dispatch(getLineChart(start_date+start_ts, end_date+end_ts));
          }, [range])
 
      return (

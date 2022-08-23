@@ -31,17 +31,15 @@ export const getLineChart = (start_date, end_date) => dispatch => {
     // dispatch(showLoadingScreen(true));
     let config = {
         headers: Header,
-        params: {
-            image__date__gte: start_date,
-            image__date__lte: end_date,
-        },
     };
-    axios.get("https://api.tpilums.org.pk/core/api/box/linechart/", config).then(res => {
+    axios.get(`http://127.0.0.1:8000/core/api/box/linechart/?image__date__gte=${start_date}&image__date__lte=${end_date}`, config).then(res => {
         dispatch(setLineChart(res.data));
+
     }).catch(err => {
+        debugger;
         dispatch(setSnackBar(err.response.data.non_field_errors[0]));
     }).finally(() => {
-        dispatch(showLoadingScreen(false));
+        // dispatch(showLoadingScreen(false));
     });
 };
 

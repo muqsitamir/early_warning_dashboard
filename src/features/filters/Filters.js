@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
-import {Dialog} from "@mui/material";
+import {Dialog, Stack, TextField} from "@mui/material";
 import DatePicker from "../../reusable_components/DatePicker";
 import {useDispatch, useSelector} from "react-redux";
-import {setCameras, setDateRange, setSpecies, setFilterApplied} from "./filterSlice";
+import {setCameras, setDateRange, setSpecies, setFilterApplied, setTimeRange} from "./filterSlice";
 import MultiSelect from "../../reusable_components/MultiSelect";
 import {selectOrganization} from "../organization/organizationSlice";
 import FilterListIcon from '@mui/icons-material/FilterList';
+import {DesktopTimePicker, LocalizationProvider} from "@mui/x-date-pickers-pro";
+import {AdapterDateFns} from "@mui/x-date-pickers-pro/AdapterDateFns";
 
 
 export function Filters() {
@@ -19,6 +21,8 @@ export function Filters() {
       endDate: new Date(),
       key: 'range'
     });
+    const [startTime, setStartTime] = useState(new Date('2018-01-01T19:00:00.000Z'));
+    const [endTime, setEndTime] = useState(new Date('2018-01-01T19:00:00.000Z'));
     const [newCameras, setNewCameras] = useState([]);
     const [newSpecies, setNewSpecies] = useState([]);
 
@@ -31,6 +35,12 @@ export function Filters() {
     const handleDateChange = (range) => {
         setNewRange({startDate: range.range.startDate, endDate: range.range.endDate, key: 'range'})
     }
+    const handleEndTimeChange = (newValue) => {
+        setEndTime(newValue);
+    }
+    const handleStartTimeChange = (newValue) => {
+        setStartTime(newValue);
+    }
     const handleSpecieSelect = (e) => {
         setNewSpecies(e.target.value)
     }
@@ -42,6 +52,7 @@ export function Filters() {
         dispatch(setCameras(newCameras));
         dispatch(setSpecies(newSpecies));
         dispatch(setFilterApplied(true));
+        dispatch(setTimeRange({startTime: startTime, endTime: endTime}))
         setState({open: false});
     }
     return(
@@ -55,6 +66,22 @@ export function Filters() {
                 onClose={handleClose}
                 closeAfterTransition>
                         <DatePicker ranges={newRange} onChange={handleDateChange}/>
+                         <LocalizationProvider dateAdapter={AdapterDateFns}>
+                             <Stack spacing={2}>
+                                <DesktopTimePicker
+                                  label="Start Date Time"
+                                  value={startTime}
+                                  onChange={handleStartTimeChange}
+                                  renderInput={(params) => <TextField {...params} />}
+                                />
+                                <DesktopTimePicker
+                                  label="End Date Time"
+                                  value={endTime}
+                                  onChange={handleEndTimeChange}
+                                  renderInput={(params) => <TextField type="text"{...params} />}
+                                />
+                             </Stack>
+                         </LocalizationProvider>
                         <MultiSelect label={"Cameras"} onChange={handleCameraSelect} values={newCameras} items={cameraItems}  />
                         <MultiSelect label={"Species"} onChange={handleSpecieSelect} values={newSpecies} items={speciesItems}/>
                         <div className="center tc pv3 ph2">

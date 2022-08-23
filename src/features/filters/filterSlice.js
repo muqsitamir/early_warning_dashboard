@@ -1,4 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit'
+import dateRange from "react-date-range/dist/components/DateRange";
 
 export const filterSlice = createSlice({
   name: 'filters',
@@ -9,10 +10,19 @@ export const filterSlice = createSlice({
       endDate: new Date(),
       key: 'range'
     },
+    startTime: new Date(),
+    endTime: new Date(),
     cameras: [],
     species: []
   },
   reducers: {
+      setTimeRange: (state, action) => {
+          debugger;
+
+          state.startTime = action.payload.startTime;
+          state.endTime = action.payload.endTime;
+          debugger;
+      },
       setFilterApplied: (state, action) => {
           state.filterApplied = action.payload
       },
@@ -29,7 +39,7 @@ export const filterSlice = createSlice({
 })
 
 // Action creators are generated for each case reducer function
-export const { setDateRange, setCameras, setSpecies, setFilterApplied } = filterSlice.actions
+export const { setDateRange, setCameras, setSpecies, setFilterApplied, setTimeRange } = filterSlice.actions
 export const selectFilters = (state) => state.filters;
 
 
