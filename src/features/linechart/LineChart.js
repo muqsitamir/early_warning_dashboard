@@ -4,17 +4,17 @@ import {getLineChart, selectLineChart} from "./lineChartSlice";
 import {useDispatch, useSelector} from "react-redux";
 import {selectFilters} from "../filters/filterSlice";
 import {CategoryScale, LinearScale, Chart, PointElement, LineElement} from 'chart.js';
+import {convert_to_request_parameters} from "../../reusable_components/utilityfunctions";
 Chart.register(CategoryScale,LinearScale, PointElement, LineElement);
 
 export function LineChart() {
     const {line_chart} = useSelector(selectLineChart);
-    const {range} = useSelector(selectFilters);
+    const filters = useSelector(selectFilters);
     const dispatch = useDispatch();
      useEffect(() => {
-         let StartD = range.startDate ? range.startDate.getFullYear() + '-' + (range.startDate.getMonth() + 1) + '-' + range.startDate.getDate() : '';
-         let EndD = range.endDate.getFullYear() + '-' + (range.endDate.getMonth() + 1) + '-' + range.endDate.getDate();
-         dispatch(getLineChart(StartD, EndD));
-         }, [range])
+         let result = convert_to_request_parameters(filters.range, filters.startTime, filters.endTime)
+         dispatch(getLineChart(result.start, result.end));
+         }, [filters])
 
      return (
         <div style={{
