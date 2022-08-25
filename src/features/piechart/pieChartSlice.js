@@ -38,7 +38,7 @@ export const getPieChart = (start_date, end_date) => dispatch => {
     let config = {
         headers: Header,
     };
-    axios.get(`http://127.0.0.1:8000/core/api/box/piechart/?image__date__gte=${start_date}&image__date__lte=${end_date}`, config).then(res => {
+    axios.get(`https://api.tpilums.org.pk/core/api/box/piechart/?image__date__gte=${start_date}&image__date__lte=${end_date}`, config).then(res => {
         dispatch(setPieChart(res.data));
     }).catch(err => {
         dispatch(setSnackBar(err.response.data.non_field_errors[0]));

@@ -20,7 +20,6 @@ export function EventsTable(){
     const {results: events, count} = useSelector(selectEvents);
     const filters = useSelector(selectFilters);
     const dispatch = useDispatch();
-    debugger;
     useEffect(() => {
         dispatch(getEvents(state.page + 1, filters.filterApplied));
         let check = filters.filterApplied ? false : filters.filterApplied;

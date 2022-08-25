@@ -2,8 +2,7 @@ import { createSlice } from '@reduxjs/toolkit'
 import axios from "axios";
 import {selectFilters} from "../filters/filterSlice";
 import {showLoadingScreen, setSnackBar} from "../../reusable_components/site_data/siteDataSlice";
-
-
+import {convert_to_request_parameters} from "../../reusable_components/utilityfunctions";
 
 
 export const eventsSlice = createSlice({
@@ -33,14 +32,11 @@ export const getEvents= (page, filterApplied) => (dispatch, getState) => {
     let config = {
         headers: Header,
     };
-    const {range, cameras, species, startTime, endTime} = selectFilters(getState());
-    let start_date = range.startDate ? range.startDate.getFullYear() + '-' + (range.startDate.getMonth() + 1) + '-' + range.startDate.getDate() : '';
-    let start_ts = start_date == "" ? "" : "T" + startTime.getHours() + "%3A" + startTime.getMinutes() + "%3A" + startTime.getSeconds() ;
-    let end_date = range.endDate.getFullYear() + '-' + (range.endDate.getMonth() + 1) + '-' + range.endDate.getDate();
-    let end_ts =  "T" + endTime.getHours() + "%3A" + endTime.getMinutes() + "%3A" + endTime.getSeconds() ;
-    let cameras_selected = cameras.join(',');
-    let species_selected = species.join(',');
-    axios.get(`http://127.0.0.1:8000/core/api/event/?datetime_after=${start_date}${start_ts}&datetime_before=${end_date}${end_ts}&cameras=${cameras_selected}&species=${species_selected}&page=${page}`, config).then((res) => {
+    const filters = selectFilters(getState());
+    let result = convert_to_request_parameters(filters.range, filters.startTime, filters.endTime)
+    let cameras_selected = filters.cameras.join(',');
+    let species_selected = filters.species.join(',');
+    axios.get(`https://api.tpilums.org.pk/core/api/event/?datetime_after=${result.start}&datetime_before=${result.end}&cameras=${cameras_selected}&species=${species_selected}&page=${page}`, config).then((res) => {
         res.data["filterApplied"] = filterApplied;
         dispatch(setEvents(res.data));
     }).catch((err) => {
