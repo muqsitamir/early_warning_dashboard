@@ -4070,3 +4070,15 @@ ul.store-categories a:hover {
   }
 }
 
+@media screen and (max-width: 680px) {
+  .disappear{
+      font-size: 25px;
+      line-height: 29px;
+  }
+  #lums-img-button{
+    font-size: 5px;
+  }
+  #lums-img-button1{
+    font-size: 5px;
+  }
+}

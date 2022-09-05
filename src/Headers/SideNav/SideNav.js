@@ -7,7 +7,7 @@ export default function SideNav(){
           <div className="side-menu-panel hide-scrollbar ph3">
                 <ul className="side-menu pl0 pb4">
                     <li className={"item item-active"}>
-                        <Link className="db text-decoration-none" to="/">
+                        <Link className="db text-decoration-none" to="/dashboard">
                             <i className="material-icons-outlined v-mid mr2">home</i>
                             <span>Home</span>
                         </Link>

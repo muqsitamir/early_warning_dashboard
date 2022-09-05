@@ -1161,3 +1161,19 @@ template {
     display: flex;
     justify-content: center;
 }
+
+#lums-img:hover{
+    transform: scale(1.03);
+}
+
+
+#lums-img-button:hover{
+    background-color: white;
+    color: rgb(8, 35, 68);
+}
+
+
+#lums-img-button1:hover{
+    background-color: rgb(8, 35, 68);
+    color: white;
+}

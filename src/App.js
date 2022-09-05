@@ -15,7 +15,7 @@ import NotFound from "./reusable_components/NotFound";
 import ReactSpinner from "./reusable_components/ReactSpinner";
 import Cameras from "./pages/Cameras";
 import OnlyPublicRoute from "./Authentication/OnlyPublicRoute";
-
+import Cover from './pages/Cover'
 
 export default function App () {
         return (
@@ -23,16 +23,17 @@ export default function App () {
                 <TopAppBarProtection Component={TopAppBar} />
                 <ReactSpinner/>
                 <Switch>
-                <ProtectedRoute exact path='/' Component={Home} />
-                <ProtectedRoute exact path='/cameras' Component={Cameras} />
-                <OnlyPublicRoute exact path='/login' Component={Login} />
-                <Route exact path='/logout' render={(props) => <Logout {...props}/>}/>
-                <Route path='/reset-password' render={(props) => <ResetPassword {...props}/>}/>
-                {/*    <Route exact path='/register' render={(props) => <Register {...props}/>}/>*/}
-                {/*    <Route path='/new-password/:token' render={(props) => <NewPassword {...props}/>}/>*/}
-                {/*    <Route exact path='/resend/new-password' render={(props) => <ResendPassword {...props}/>}/>*/}
-                <Route path='/not-found' component={NotFound}/>
-                <Redirect to='/not-found'/>
+                        <ProtectedRoute exact path='/dashboard' Component={Home} />
+                        <ProtectedRoute exact path='/cameras' Component={Cameras} />
+                        <OnlyPublicRoute exact path='/login' Component={Login} />
+                        <OnlyPublicRoute exact path='/' Component={Cover} />
+                        <Route exact path='/logout' render={(props) => <Logout {...props}/>}/>
+                        <Route path='/reset-password' render={(props) => <ResetPassword {...props}/>}/>
+                        {/*    <Route exact path='/register' render={(props) => <Register {...props}/>}/>*/}
+                        {/*    <Route path='/new-password/:token' render={(props) => <NewPassword {...props}/>}/>*/}
+                        {/*    <Route exact path='/resend/new-password' render={(props) => <ResendPassword {...props}/>}/>*/}
+                        <Route path='/not-found' component={NotFound}/>
+                        <Redirect to='/not-found'/>
                 </Switch>
                 <MessageSnackbar/>
             </React.Fragment>

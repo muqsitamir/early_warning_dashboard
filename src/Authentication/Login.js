@@ -46,7 +46,7 @@ class Login extends Form {
             localStorage.setItem("token", res.data.auth_token);
             localStorage.setItem('user', JSON.stringify(res.data.user));
             const {state} = props.location;
-            window.location = state ? state.from.pathname : "/"
+            window.location = state ? state.from.pathname : "/dashboard"
         }).catch(err => {
             this.props.setSnackBar(err.response.data.non_field_errors[0])
         }).finally(() => {
