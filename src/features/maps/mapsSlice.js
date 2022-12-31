@@ -1,6 +1,7 @@
 import {createSlice} from '@reduxjs/toolkit'
 import axios from "axios";
 import {showLoadingScreen, setSnackBar} from "../../reusable_components/site_data/siteDataSlice";
+import {backend_url} from "../../App";
 
 
 export const mapsSlice = createSlice({
@@ -24,7 +25,7 @@ export const getCameraNodes = () => dispatch => {
     let config = {
         headers: Header,
     };
-    axios.get("https://api.tpilums.org.pk/core/api/camera/", config).then(res => {
+    axios.get(`${backend_url}/core/api/camera/`, config).then(res => {
         dispatch(setMaps(res.data));
     }).catch(err => {
         dispatch(setSnackBar(err.response.data.non_field_errors[0]));

@@ -3,7 +3,7 @@ import axios from "axios";
 import {selectFilters} from "../filters/filterSlice";
 import {showLoadingScreen, setSnackBar} from "../../reusable_components/site_data/siteDataSlice";
 import {convert_to_request_parameters} from "../../reusable_components/utilityfunctions";
-
+import {backend_url} from "../../App";
 
 export const eventsSlice = createSlice({
   name: 'events',
@@ -36,7 +36,7 @@ export const getEvents= (page, filterApplied) => (dispatch, getState) => {
     let result = convert_to_request_parameters(filters.range, filters.startTime, filters.endTime)
     let cameras_selected = filters.cameras.join(',');
     let species_selected = filters.species.join(',');
-    axios.get(`https://api.tpilums.org.pk/core/api/event/?datetime_after=${result.start}&datetime_before=${result.end}&cameras=${cameras_selected}&species=${species_selected}&page=${page}`, config).then((res) => {
+    axios.get(`${backend_url}/core/api/event/?datetime_after=${result.start}&datetime_before=${result.end}&cameras=${cameras_selected}&species=${species_selected}&page=${page}`, config).then((res) => {
         res.data["filterApplied"] = filterApplied;
         dispatch(setEvents(res.data));
     }).catch((err) => {

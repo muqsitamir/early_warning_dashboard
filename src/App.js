@@ -16,8 +16,10 @@ import ReactSpinner from "./reusable_components/ReactSpinner";
 import Cameras from "./pages/Cameras";
 import OnlyPublicRoute from "./Authentication/OnlyPublicRoute";
 
+export const backend_url = "https://api.tpilums.org.pk";
 
 export default function App () {
+
         return (
             <React.Fragment>
                 <TopAppBarProtection Component={TopAppBar} />

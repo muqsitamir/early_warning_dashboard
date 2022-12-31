@@ -1,6 +1,7 @@
 import {createSlice} from '@reduxjs/toolkit'
 import axios from "axios";
 import {setSnackBar, showLoadingScreen} from "../../reusable_components/site_data/siteDataSlice";
+import {backend_url} from "../../App";
 
 
 export const lineChartSlice = createSlice({
@@ -32,7 +33,7 @@ export const getLineChart = (start_date, end_date) => dispatch => {
     let config = {
         headers: Header,
     };
-    axios.get(`https://api.tpilums.org.pk/core/api/box/linechart/?image__date__gte=${start_date}&image__date__lte=${end_date}`, config).then(res => {
+    axios.get(`${backend_url}/core/api/box/linechart/?image__date__gte=${start_date}&image__date__lte=${end_date}`, config).then(res => {
         dispatch(setLineChart(res.data));
 
     }).catch(err => {
