@@ -3,18 +3,23 @@ import "../App.css";
 import { Filters } from "../features/filters/Filters";
 import { useDispatch, useSelector } from "react-redux";
 import { selectSiteData } from "../reusable_components/site_data/siteDataSlice";
-import { getOrganization } from "../features/organization/organizationSlice";
+import {getOrganization, selectOrganization} from "../features/organization/organizationSlice";
 import { EventsTable } from "../features/events/EventsTable";
 import SideNav from "../Headers/SideNav/SideNav";
 import { LineChart } from "../features/linechart/LineChart";
 import { PieChart } from "../features/piechart/PieChart";
 import { Maps } from "../features/maps/Maps";
+import {EventsTableWWF} from "../features/events/EventsTableWWF";
+import {selectFilters} from "../features/filters/filterSlice";
 
 export default function Home() {
   const dispatch = useDispatch();
+  const organization = useSelector(selectOrganization);
   useEffect(() => {
     dispatch(getOrganization());
   }, []);
+
+  let event_component = organization.name === "CVGL" ? <EventsTable/> : <EventsTableWWF/>;
   const { side_nav: side_nav_check } = useSelector(selectSiteData);
   let side_nav = side_nav_check ? <SideNav /> : null;
   return (
@@ -69,8 +74,8 @@ export default function Home() {
                   </div>
                 </div>
               </div>
-              <EventsTable />
-
+              {/*<EventsTable />*/}
+              {event_component}
               {/*{/<div className="row">/}*/}
               {/*/!*    <div className="col s12">*!/*/}
               {/*/!*        <h1 className="bold pb2">Loreum Ipsum</h1>*!/*/}

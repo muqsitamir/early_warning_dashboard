@@ -7,6 +7,7 @@ export const organizationSlice = createSlice({
   name: 'organization',
   initialState: {
       organization: {
+          name: '',
           cameras: [],
           species: []
       },
