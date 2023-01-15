@@ -6,6 +6,7 @@ import Joi from 'joi-browser';
 import axios from "axios";
 import {connect} from "react-redux";
 import {showLoadingScreen, setSnackBar, resetSnackBar} from "../reusable_components/site_data/siteDataSlice";
+import {backend_url} from "../App";
 
 class Login extends Form {
 
@@ -42,7 +43,7 @@ class Login extends Form {
     login = (user, props) => {
         this.props.showLoadingScreen(true);
         const Header = {};
-        axios.post("https://api.tpilums.org.pk/accounts/api/token/login/", user, {headers: Header}).then(res => {
+        axios.post(`${backend_url}/accounts/api/token/login/`, user, {headers: Header}).then(res => {
             localStorage.setItem("token", res.data.auth_token);
             localStorage.setItem('user', JSON.stringify(res.data.user));
             const {state} = props.location;
