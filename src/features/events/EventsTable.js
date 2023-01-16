@@ -34,10 +34,10 @@ export function EventsTable() {
     setSelected([]);
     dispatch(resetEvents());
     dispatch(resetFilters());
-  }
+  };
 
   useEffect(() => {
-    dispatch(getEvents(state.page + 1, filters.filterApplied, status(tab)));
+    dispatch(getEvents(state.page + 1, filters.filterApplied, status(tab), rowsPerPage));
     let check = filters.filterApplied ? false : filters.filterApplied;
     dispatch(setFilterApplied(check));
   }, [filters]);
@@ -50,16 +50,17 @@ export function EventsTable() {
   }, [tab]);
 
   const handleChangePage = (event, newPage) => {
-    if (newPage > state.page) dispatch(getEvents(newPage + 1, filters.filterApplied, status(tab)));
+    if (newPage > state.page) dispatch(getEvents(newPage + 1, filters.filterApplied, status(tab), rowsPerPage));
     setState({ page: newPage, rowsPerPage: state.rowsPerPage });
+    setSelected([]);
   };
 
   const handleChangeRowsPerPage = (event) => {
-    setState({ rowsPerPage: parseInt(event.target.value, 10), page: 0 });
+    setState({ page: 0, rowsPerPage: parseInt(event.target.value, 10) });
   };
 
   const handleArchive = () => {
-    if(tab !== 1) {
+    if (tab !== 1) {
       dispatch(updateEventStatus(selected, "archive"));
     } else {
       dispatch(updateEventStatus(selected, "restore"));
@@ -68,7 +69,7 @@ export function EventsTable() {
   };
 
   const handleStar = () => {
-    if(tab !== 2) {
+    if (tab !== 2) {
       dispatch(updateEventStatus(selected, "feature"));
     } else {
       dispatch(updateEventStatus(selected, "restore"));
@@ -99,10 +100,13 @@ export function EventsTable() {
               <TableCell>
                 <input
                   type="checkbox"
-                  checked={selected.length === events.length}
+                  checked={events
+                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                    .map((event) => event.uuid)
+                    .every((item) => selected.includes(item))}
                   onChange={() => {
-                    if (selected.length === events.length) setSelected([]);
-                    else setSelected(events.map((event) => event.uuid));
+                    if (selected.length === rowsPerPage) setSelected([]);
+                    else setSelected(events.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((event) => event.uuid));
                   }}
                 />
               </TableCell>
@@ -158,7 +162,7 @@ export function EventsTable() {
         </Table>
       </TableContainer>
       <TablePagination
-        rowsPerPageOptions={[]}
+        rowsPerPageOptions={[10, 20, 50, 100]}
         component="div"
         count={count !== null ? count : "loading..."}
         rowsPerPage={rowsPerPage}

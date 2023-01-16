@@ -34,7 +34,7 @@ export const eventsSlice = createSlice({
 
 const Header = {};
 export const getEvents =
-  (page, filterApplied, status = null) =>
+  (page, filterApplied, status = null, rowsPerPage = 10) =>
   (dispatch, getState) => {
     dispatch(showLoadingScreen(true));
     Header["Authorization"] = `Token ${localStorage.getItem("token")}`;
@@ -48,7 +48,7 @@ export const getEvents =
     let eventStatus = status ? `&status=${status}` : "";
     axios
       .get(
-        `https://api.tpilums.org.pk/core/api/event/?datetime_after=${result.start}&datetime_before=${result.end}&cameras=${cameras_selected}&species=${species_selected}&page=${page}${eventStatus}`,
+        `https://api.tpilums.org.pk/core/api/event/?datetime_after=${result.start}&datetime_before=${result.end}&cameras=${cameras_selected}&species=${species_selected}&page=${page}&rows_per_page=${rowsPerPage}${eventStatus}`,
         config
       )
       .then((res) => {
