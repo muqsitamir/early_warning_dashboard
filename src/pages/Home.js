@@ -18,7 +18,13 @@ export default function Home() {
   useEffect(() => {
     dispatch(getOrganization());
   }, []);
-
+  const {eventComponent, setEventComponent} = useState(null);
+  if(eventComponent === 'WWF'){
+    setEventComponent(<EventsTableWWF/>)
+  }
+  if (eventComponent === 'CVGL'){
+    setEventComponent(<EventsTable/>)
+  }
   let event_component = organization.name === "CVGL" ? <EventsTable/> : <EventsTableWWF/>;
   const { side_nav: side_nav_check } = useSelector(selectSiteData);
   let side_nav = side_nav_check ? <SideNav /> : null;
