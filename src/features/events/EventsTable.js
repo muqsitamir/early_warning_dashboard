@@ -27,9 +27,10 @@ import StarIcon from "@mui/icons-material/Star";
 import UnarchiveIcon from "@mui/icons-material/Unarchive";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useDispatch, useSelector } from "react-redux";
-import { getEvents, selectEvents, resetEvents, updateEventStatus } from "./eventsSlice";
+import { getEvents, selectEvents, resetEvents, updateEventStatus, deleteEvent, annotateEvents, removeAnnotations } from "./eventsSlice";
 import { selectFilters, setFilterApplied, resetFilters } from "../filters/filterSlice";
 import { selectOrganization } from "../organization/organizationSlice";
+import { TextFormat } from "@mui/icons-material";
 
 export function EventsTable() {
   const [state, setState] = useState({ page: 0, rowsPerPage: 10 });
@@ -57,8 +58,8 @@ export function EventsTable() {
     }
   };
 
-  const reloadEvents = () => {
-    setState({ page: 0, rowsPerPage: 10 });
+  const reloadEvents = (pageSize = 10) => {
+    setState({ page: 0, rowsPerPage: pageSize });
     setSelected([]);
     dispatch(resetEvents());
     dispatch(resetFilters());
@@ -84,7 +85,7 @@ export function EventsTable() {
   };
 
   const handleChangeRowsPerPage = (event) => {
-    setState({ page: 0, rowsPerPage: parseInt(event.target.value, 10) });
+    reloadEvents(parseInt(event.target.value, 10));
   };
 
   const handleArchive = () => {
@@ -106,13 +107,22 @@ export function EventsTable() {
   };
 
   const handleDelete = () => {
-    // api call for deleting selected events here?
+    dispatch(deleteEvent(selected));
+    setShowDeleteConfirmation(false);
+    reloadEvents();
   };
 
   const handleAnnotate = () => {
-    // api call for annotating selected events here?
-    console.log(selectedAnnotations);
+    dispatch(annotateEvents(selected, selectedAnnotations));
+    setShowAnnotateMenu(false);
+    reloadEvents();
   };
+
+  const handleUnAnnotate = () => {
+    dispatch(removeAnnotations(selected, selectedAnnotations));
+    setShowAnnotateMenu(false);
+    reloadEvents();
+  }
 
   const { page, rowsPerPage } = state;
   return (
@@ -143,7 +153,7 @@ export function EventsTable() {
       >
         <DialogTitle id="alert-dialog-title">Annotate Event(s)</DialogTitle>
         <DialogContent dividers>
-          <DialogContentText id="alert-dialog-description">Select all labels you want to apply!</DialogContentText>
+          <DialogContentText id="alert-dialog-description">Select all the labels you want to apply (or remove)!</DialogContentText>
           <FormGroup>
             {allSpecies.map((species) => (
               <FormControlLabel
@@ -170,6 +180,7 @@ export function EventsTable() {
           >
             Cancel
           </Button>
+          <Button onClick={handleUnAnnotate}>UnAnnotate</Button>
           <Button onClick={handleAnnotate} autoFocus>
             Annotate
           </Button>
@@ -183,8 +194,9 @@ export function EventsTable() {
             <Tab label="Featured" />
           </Tabs>
           {selected.length > 0 && (
-            <div style={{ flex: 2.5, alignSelf: "center", display: "flex", justifyContent: "space-between", paddingRight: "3vw" }}>
-              <Button onClick={() => setShowAnnotateMenu(true)}>Annotate</Button>
+            <div style={{ flex: 5.5, alignSelf: "center", display: "flex", justifyContent: "space-between", paddingRight: "3vw" }}>
+              <h6 style={{alignSelf: "center"}}>{selected.length > 0 && (`${selected.length} selected`)}</h6>
+              <Button onClick={() => setShowAnnotateMenu(true)}>Annotations Menu</Button>
               <div style={{ alignSelf: "center", flex: 0.7, display: "flex", justifyContent: "space-between" }}>
                 <div onClick={handleArchive}>{tab === 1 ? <UnarchiveIcon style={{ color: "red" }} /> : <ArchiveIcon />}</div>
                 <StarIcon onClick={handleStar} style={{ color: tab === 2 ? "red" : "black" }} />
@@ -266,6 +278,7 @@ export function EventsTable() {
         page={page}
         onRowsPerPageChange={handleChangeRowsPerPage}
         onPageChange={handleChangePage}
+        showFirstButton
       />
     </Paper>
   );

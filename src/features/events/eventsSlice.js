@@ -48,7 +48,7 @@ export const getEvents =
     let eventStatus = status ? `&status=${status}` : "";
     axios
       .get(
-        `https://api.tpilums.org.pk/core/api/event/?datetime_after=${result.start}&datetime_before=${result.end}&cameras=${cameras_selected}&species=${species_selected}&page=${page}&rows_per_page=${rowsPerPage}${eventStatus}`,
+        `https://api.tpilums.org.pk/core/api/event/?datetime_after=${result.start}&datetime_before=${result.end}&cameras=${cameras_selected}&species=${species_selected}&page=${page}&page_size=${rowsPerPage}${eventStatus}`,
         config
       )
       .then((res) => {
@@ -80,6 +80,80 @@ export const updateEventStatus = (eventIds, action) => (dispatch, getState) => {
     .post(`https://api.tpilums.org.pk/core/api/event/batch_update/`, data, config)
     .then((res) => {
       dispatch(setSnackBar("Event status updated successfully"));
+    })
+    .catch((err) => {
+      dispatch(setSnackBar(err.response.data.non_field_errors[0]));
+    })
+    .finally(() => {
+      dispatch(showLoadingScreen(false));
+    });
+};
+
+export const deleteEvent = (eventIds) => (dispatch, getState) => {
+  dispatch(showLoadingScreen(true));
+  Header["Authorization"] = `Token ${localStorage.getItem("token")}`;
+  let config = {
+    headers: Header,
+  };
+
+  const data = {
+    events: eventIds,
+  };
+
+  axios
+    .post(`https://api.tpilums.org.pk/core/api/event/delete_events/`, data, config)
+    .then((res) => {
+      dispatch(setSnackBar("Event deleted successfully"));
+    })
+    .catch((err) => {
+      dispatch(setSnackBar(err.response.data.non_field_errors[0]));
+    })
+    .finally(() => {
+      dispatch(showLoadingScreen(false));
+    });
+};
+
+export const annotateEvents = (eventIds, annotations) => (dispatch, getState) => {
+  dispatch(showLoadingScreen(true));
+  Header["Authorization"] = `Token ${localStorage.getItem("token")}`;
+  let config = {
+    headers: Header,
+  };
+
+  const data = {
+    events: eventIds,
+    species: annotations,
+  };
+
+  axios
+    .post(`https://api.tpilums.org.pk/core/api/event/annotate_species/`, data, config)
+    .then((res) => {
+      dispatch(setSnackBar("Event(s) annotated successfully"));
+    })
+    .catch((err) => {
+      dispatch(setSnackBar(err.response.data.non_field_errors[0]));
+    })
+    .finally(() => {
+      dispatch(showLoadingScreen(false));
+    });
+};
+
+export const removeAnnotations = (eventIds, annotations) => (dispatch, getState) => {
+  dispatch(showLoadingScreen(true));
+  Header["Authorization"] = `Token ${localStorage.getItem("token")}`;
+  let config = {
+    headers: Header,
+  };
+
+  const data = {
+    events: eventIds,
+    species: annotations,
+  };
+
+  axios
+    .post(`https://api.tpilums.org.pk/core/api/event/remove_species/`, data, config)
+    .then((res) => {
+      dispatch(setSnackBar("Annotation(s) removed successfully"));
     })
     .catch((err) => {
       dispatch(setSnackBar(err.response.data.non_field_errors[0]));
