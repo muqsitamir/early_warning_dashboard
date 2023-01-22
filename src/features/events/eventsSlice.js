@@ -3,6 +3,7 @@ import axios from "axios";
 import { selectFilters } from "../filters/filterSlice";
 import { showLoadingScreen, setSnackBar } from "../../reusable_components/site_data/siteDataSlice";
 import { convert_to_request_parameters } from "../../reusable_components/utilityfunctions";
+import {backend_url} from "../../App";
 
 export const eventsSlice = createSlice({
   name: "events",
@@ -34,7 +35,7 @@ export const eventsSlice = createSlice({
 
 const Header = {};
 export const getEvents =
-  (page, filterApplied, status = null) =>
+  (page, filterApplied, status = null, rowsPerPage = 10) =>
   (dispatch, getState) => {
     dispatch(showLoadingScreen(true));
     Header["Authorization"] = `Token ${localStorage.getItem("token")}`;
@@ -48,7 +49,7 @@ export const getEvents =
     let eventStatus = status ? `&status=${status}` : "";
     axios
       .get(
-        `https://api.tpilums.org.pk/core/api/event/?datetime_after=${result.start}&datetime_before=${result.end}&cameras=${cameras_selected}&species=${species_selected}&page=${page}${eventStatus}`,
+        `${backend_url}/core/api/event/?datetime_after=${result.start}&datetime_before=${result.end}&cameras=${cameras_selected}&species=${species_selected}&page=${page}&page_size=${rowsPerPage}${eventStatus}`,
         config
       )
       .then((res) => {
@@ -77,9 +78,83 @@ export const updateEventStatus = (eventIds, action) => (dispatch, getState) => {
   };
 
   axios
-    .post(`https://api.tpilums.org.pk/core/api/event/batch_update/`, data, config)
+    .post(`${backend_url}/core/api/event/batch_update/`, data, config)
     .then((res) => {
       dispatch(setSnackBar("Event status updated successfully"));
+    })
+    .catch((err) => {
+      dispatch(setSnackBar(err.response.data.non_field_errors[0]));
+    })
+    .finally(() => {
+      dispatch(showLoadingScreen(false));
+    });
+};
+
+export const deleteEvent = (eventIds) => (dispatch, getState) => {
+  dispatch(showLoadingScreen(true));
+  Header["Authorization"] = `Token ${localStorage.getItem("token")}`;
+  let config = {
+    headers: Header,
+  };
+
+  const data = {
+    events: eventIds,
+  };
+
+  axios
+    .post(`${backend_url}/core/api/event/delete_events/`, data, config)
+    .then((res) => {
+      dispatch(setSnackBar("Event deleted successfully"));
+    })
+    .catch((err) => {
+      dispatch(setSnackBar(err.response.data.non_field_errors[0]));
+    })
+    .finally(() => {
+      dispatch(showLoadingScreen(false));
+    });
+};
+
+export const annotateEvents = (eventIds, annotations) => (dispatch, getState) => {
+  dispatch(showLoadingScreen(true));
+  Header["Authorization"] = `Token ${localStorage.getItem("token")}`;
+  let config = {
+    headers: Header,
+  };
+
+  const data = {
+    events: eventIds,
+    species: annotations,
+  };
+
+  axios
+    .post(`${backend_url}/core/api/event/annotate_species/`, data, config)
+    .then((res) => {
+      dispatch(setSnackBar("Event(s) annotated successfully"));
+    })
+    .catch((err) => {
+      dispatch(setSnackBar(err.response.data.non_field_errors[0]));
+    })
+    .finally(() => {
+      dispatch(showLoadingScreen(false));
+    });
+};
+
+export const removeAnnotations = (eventIds, annotations) => (dispatch, getState) => {
+  dispatch(showLoadingScreen(true));
+  Header["Authorization"] = `Token ${localStorage.getItem("token")}`;
+  let config = {
+    headers: Header,
+  };
+
+  const data = {
+    events: eventIds,
+    species: annotations,
+  };
+
+  axios
+    .post(`${backend_url}/core/api/event/remove_species/`, data, config)
+    .then((res) => {
+      dispatch(setSnackBar("Annotation(s) removed successfully"));
     })
     .catch((err) => {
       dispatch(setSnackBar(err.response.data.non_field_errors[0]));

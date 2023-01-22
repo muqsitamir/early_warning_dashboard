@@ -17,11 +17,8 @@ export const filterSlice = createSlice({
   },
   reducers: {
     setTimeRange: (state, action) => {
-      debugger;
-
       state.startTime = action.payload.startTime;
       state.endTime = action.payload.endTime;
-      debugger;
     },
     setFilterApplied: (state, action) => {
       state.filterApplied = action.payload;
