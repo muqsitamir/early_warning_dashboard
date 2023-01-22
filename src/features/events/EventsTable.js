@@ -196,7 +196,14 @@ export function EventsTable() {
           {selected.length > 0 && (
             <div style={{ flex: 5.5, alignSelf: "center", display: "flex", justifyContent: "space-between", paddingRight: "3vw" }}>
               <h6 style={{alignSelf: "center"}}>{selected.length > 0 && (`${selected.length} selected`)}</h6>
-              <Button onClick={() => setShowAnnotateMenu(true)}>Annotations Menu</Button>
+              <Button
+                onClick={() => {
+                  setShowAnnotateMenu(true);
+                  setSelectedAnnotations([]);
+                }}
+              >
+                Annotations Menu
+              </Button>
               <div style={{ alignSelf: "center", flex: 0.7, display: "flex", justifyContent: "space-between" }}>
                 <div onClick={handleArchive}>{tab === 1 ? <UnarchiveIcon style={{ color: "red" }} /> : <ArchiveIcon />}</div>
                 <StarIcon onClick={handleStar} style={{ color: tab === 2 ? "red" : "black" }} />
