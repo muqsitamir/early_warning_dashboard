@@ -3,6 +3,7 @@ import axios from "axios";
 import { selectFilters } from "../filters/filterSlice";
 import { showLoadingScreen, setSnackBar } from "../../reusable_components/site_data/siteDataSlice";
 import { convert_to_request_parameters } from "../../reusable_components/utilityfunctions";
+import {backend_url} from "../../App";
 
 export const eventsSlice = createSlice({
   name: "events",
@@ -48,7 +49,7 @@ export const getEvents =
     let eventStatus = status ? `&status=${status}` : "";
     axios
       .get(
-        `https://api.tpilums.org.pk/core/api/event/?datetime_after=${result.start}&datetime_before=${result.end}&cameras=${cameras_selected}&species=${species_selected}&page=${page}&page_size=${rowsPerPage}${eventStatus}`,
+        `${backend_url}/core/api/event/?datetime_after=${result.start}&datetime_before=${result.end}&cameras=${cameras_selected}&species=${species_selected}&page=${page}&page_size=${rowsPerPage}${eventStatus}`,
         config
       )
       .then((res) => {
@@ -77,7 +78,7 @@ export const updateEventStatus = (eventIds, action) => (dispatch, getState) => {
   };
 
   axios
-    .post(`https://api.tpilums.org.pk/core/api/event/batch_update/`, data, config)
+    .post(`${backend_url}/core/api/event/batch_update/`, data, config)
     .then((res) => {
       dispatch(setSnackBar("Event status updated successfully"));
     })
@@ -101,7 +102,7 @@ export const deleteEvent = (eventIds) => (dispatch, getState) => {
   };
 
   axios
-    .post(`https://api.tpilums.org.pk/core/api/event/delete_events/`, data, config)
+    .post(`${backend_url}/core/api/event/delete_events/`, data, config)
     .then((res) => {
       dispatch(setSnackBar("Event deleted successfully"));
     })
@@ -126,7 +127,7 @@ export const annotateEvents = (eventIds, annotations) => (dispatch, getState) =>
   };
 
   axios
-    .post(`https://api.tpilums.org.pk/core/api/event/annotate_species/`, data, config)
+    .post(`${backend_url}/core/api/event/annotate_species/`, data, config)
     .then((res) => {
       dispatch(setSnackBar("Event(s) annotated successfully"));
     })
@@ -151,7 +152,7 @@ export const removeAnnotations = (eventIds, annotations) => (dispatch, getState)
   };
 
   axios
-    .post(`https://api.tpilums.org.pk/core/api/event/remove_species/`, data, config)
+    .post(`${backend_url}/core/api/event/remove_species/`, data, config)
     .then((res) => {
       dispatch(setSnackBar("Annotation(s) removed successfully"));
     })
