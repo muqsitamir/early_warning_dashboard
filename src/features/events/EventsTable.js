@@ -1,4 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
+import GridViewIcon from '@mui/icons-material/GridView';
+import ReorderIcon from '@mui/icons-material/Reorder';
 import {
   Chip,
   Paper,
@@ -20,7 +22,7 @@ import {
   Button,
   Checkbox,
   FormGroup,
-  FormControlLabel,
+  FormControlLabel, Grid,
 } from "@mui/material";
 import ArchiveIcon from "@mui/icons-material/Archive";
 import StarIcon from "@mui/icons-material/Star";
@@ -30,12 +32,13 @@ import { useDispatch, useSelector } from "react-redux";
 import { getEvents, selectEvents, resetEvents, updateEventStatus, deleteEvent, annotateEvents, removeAnnotations } from "./eventsSlice";
 import { selectFilters, setFilterApplied, resetFilters } from "../filters/filterSlice";
 import { selectOrganization } from "../organization/organizationSlice";
-import { TextFormat } from "@mui/icons-material";
 
 export function EventsTable() {
-  const [state, setState] = useState({ page: 0, rowsPerPage: 10 });
+  const [state, setState] = useState({ page: 1, rowsPerPage: 10 });
   const [selected, setSelected] = useState([]);
   const [tab, setTab] = useState(0);
+  const [selectMode, setSelectMode] = useState(false);
+  const [listView, setListView] = useState(true);
   const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
   const [showAnnotateMenu, setShowAnnotateMenu] = useState(false);
   const [selectedAnnotations, setSelectedAnnotations] = useState([]);
@@ -59,14 +62,14 @@ export function EventsTable() {
   };
 
   const reloadEvents = (pageSize = 10) => {
-    setState({ page: 0, rowsPerPage: pageSize });
+    setState({ page: 1, rowsPerPage: pageSize });
     setSelected([]);
     dispatch(resetEvents());
     dispatch(resetFilters());
   };
 
   useEffect(() => {
-    dispatch(getEvents(state.page + 1, filters.filterApplied, status(tab), rowsPerPage));
+    dispatch(getEvents(state.page, filters.filterApplied, status(tab), rowsPerPage));
     let check = filters.filterApplied ? false : filters.filterApplied;
     dispatch(setFilterApplied(check));
   }, [filters]);
@@ -79,7 +82,7 @@ export function EventsTable() {
   }, [tab]);
 
   const handleChangePage = (event, newPage) => {
-    if (newPage > state.page) dispatch(getEvents(newPage + 1, filters.filterApplied, status(tab), rowsPerPage));
+    if (newPage > state.page) dispatch(getEvents(newPage, filters.filterApplied, status(tab), rowsPerPage));
     setState({ page: newPage, rowsPerPage: state.rowsPerPage });
     setSelected([]);
   };
@@ -192,6 +195,8 @@ export function EventsTable() {
             <Tab label="All" />
             <Tab label="Archived" />
             <Tab label="Featured" />
+            <Button onClick={()=>setSelectMode(!selectMode)} variant="text" sx={{ position: 'absolute', right: 45, top: 5 }}>Select</Button>
+            {listView ? <GridViewIcon sx={{ position: 'absolute', right: 15, top: 12, color: "#1a76d2", '&:hover': {boxShadow: '0 0 5px 2px skyblue'} }} onClick={() => setListView(!listView)} /> : <ReorderIcon sx={{ position: 'absolute', right: 15, top: 12, color: "#1a76d2", '&:hover': {boxShadow: '0 0 5px 2px skyblue'} }} onClick={() => setListView(!listView)}/>}
           </Tabs>
           {selected.length > 0 && (
             <div style={{ flex: 5.5, alignSelf: "center", display: "flex", justifyContent: "space-between", paddingRight: "3vw" }}>
@@ -212,10 +217,12 @@ export function EventsTable() {
             </div>
           )}
         </Box>
+        {listView ? (
         <Table size="small" stickyHeader aria-label="sticky table">
           <TableHead>
             <TableRow>
               <TableCell>
+                {selectMode ? (
                 <Checkbox
                   checked={events
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
@@ -225,7 +232,7 @@ export function EventsTable() {
                     if (selected.length === rowsPerPage) setSelected([]);
                     else setSelected(events.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((event) => event.uuid));
                   }}
-                />
+                /> ) : null}
               </TableCell>
               <TableCell>Event</TableCell>
               <TableCell>Specie</TableCell>
@@ -243,6 +250,7 @@ export function EventsTable() {
                 return (
                   <TableRow key={row.uuid}>
                     <TableCell>
+                      {selectMode ? (
                       <Checkbox
                         checked={selected.includes(row.uuid)}
                         onChange={() => {
@@ -252,7 +260,7 @@ export function EventsTable() {
                             setSelected([...selected, row.uuid]);
                           }
                         }}
-                      />
+                      /> ) : null}
                     </TableCell>
                     <TableCell>
                       <a target="_blank" href={row.file}>
@@ -275,7 +283,46 @@ export function EventsTable() {
           ) : (
             <div className="container tc">Loading Data....</div>
           )}
-        </Table>
+        </Table> ) : (
+            // GRID COMPONENT
+            <div>
+              {selectMode ? (
+          <span style={{ display: 'inline-flex', alignItems: 'center' }}>
+            <Checkbox
+              checked={events
+                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                .map((event) => event.uuid)
+                .every((item) => selected.includes(item))}
+              onChange={() => {
+                if (selected.length === rowsPerPage) setSelected([]);
+                else setSelected(events.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((event) => event.uuid));
+              }}
+            />
+            <span><h4>Select All</h4></span>
+          </span>
+        ) : null}
+        <Grid container sx={{paddingTop: 3, paddingLeft: 5, paddingRight: 5}} spacing={{ xs: 2, md: 1 }} columns={{ xs: 4, sm: 8, md: 14 }}>
+        {(rowsPerPage > 0 ? events.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage) : events).map((row, index) => (
+          <Grid item xs={2} sm={4} md={2} key={index} >
+            {selectMode ? (
+            <Checkbox sx={{marginBottom: -6, color: "white"}}
+              checked={selected.includes(row.uuid)}
+              onChange={() => {
+                if (selected.includes(row.uuid)) {
+                  setSelected(selected.filter((item) => item !== row.uuid));
+                } else {
+                  setSelected([...selected, row.uuid]);
+                }
+              }}
+            />) : null}
+            <a target="_blank" href={row.file} style={{marginTop: 20 }}>
+               <img style={{ border: "groove", borderColor: "gray", borderRadius: 10, marginBottom: 2 }} src={row.thumbnail} height={100} />
+            </a>
+          </Grid>
+        ))}
+      </Grid>
+            </div>
+            )}
       </TableContainer>
       <TablePagination
         rowsPerPageOptions={[10, 20, 50, 100]}
