@@ -80,7 +80,7 @@ export const updateEventStatus = (eventIds, action) => (dispatch, getState) => {
   axios
     .post(`${backend_url}/core/api/event/batch_update/`, data, config)
     .then((res) => {
-      dispatch(setSnackBar("Event status updated successfully"));
+      dispatch(setSnackBar(res.data.message));
     })
     .catch((err) => {
       dispatch(setSnackBar(err.response.data.non_field_errors[0]));
@@ -96,7 +96,6 @@ export const deleteEvent = (eventIds) => (dispatch, getState) => {
   let config = {
     headers: Header,
   };
-
   const data = {
     events: eventIds,
   };
@@ -104,7 +103,7 @@ export const deleteEvent = (eventIds) => (dispatch, getState) => {
   axios
     .post(`${backend_url}/core/api/event/delete_events/`, data, config)
     .then((res) => {
-      dispatch(setSnackBar("Event deleted successfully"));
+      dispatch(setSnackBar(res.data.message));
     })
     .catch((err) => {
       dispatch(setSnackBar(err.response.data.non_field_errors[0]));
@@ -129,7 +128,7 @@ export const annotateEvents = (eventIds, annotations) => (dispatch, getState) =>
   axios
     .post(`${backend_url}/core/api/event/annotate_species/`, data, config)
     .then((res) => {
-      dispatch(setSnackBar("Event(s) annotated successfully"));
+      dispatch(setSnackBar(res.data.message));
     })
     .catch((err) => {
       dispatch(setSnackBar(err.response.data.non_field_errors[0]));
@@ -154,7 +153,7 @@ export const removeAnnotations = (eventIds, annotations) => (dispatch, getState)
   axios
     .post(`${backend_url}/core/api/event/remove_species/`, data, config)
     .then((res) => {
-      dispatch(setSnackBar("Annotation(s) removed successfully"));
+      dispatch(setSnackBar(res.data.message));
     })
     .catch((err) => {
       dispatch(setSnackBar(err.response.data.non_field_errors[0]));

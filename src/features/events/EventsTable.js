@@ -32,18 +32,21 @@ import { useDispatch, useSelector } from "react-redux";
 import { getEvents, selectEvents, resetEvents, updateEventStatus, deleteEvent, annotateEvents, removeAnnotations } from "./eventsSlice";
 import { selectFilters, setFilterApplied, resetFilters } from "../filters/filterSlice";
 import { selectOrganization } from "../organization/organizationSlice";
+import { TextFormat } from "@mui/icons-material";
 
 export function EventsTable() {
-  const [state, setState] = useState({ page: 1, rowsPerPage: 10 });
+  const [state, setState] = useState({ page: 0, rowsPerPage: 10 });
   const [selected, setSelected] = useState([]);
-  const [tab, setTab] = useState(0);
   const [selectMode, setSelectMode] = useState(false);
   const [listView, setListView] = useState(true);
+  const [reload, setReload] = useState(false);
+  const [tab, setTab] = useState(0);
   const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
   const [showAnnotateMenu, setShowAnnotateMenu] = useState(false);
   const [selectedAnnotations, setSelectedAnnotations] = useState([]);
   const { species: allSpecies } = useSelector(selectOrganization);
   const prevTab = useRef(tab);
+  const isFirstRender = useRef(true);
   const { results: events, count } = useSelector(selectEvents);
   const filters = useSelector(selectFilters);
   const dispatch = useDispatch();
@@ -62,27 +65,34 @@ export function EventsTable() {
   };
 
   const reloadEvents = (pageSize = 10) => {
-    setState({ page: 1, rowsPerPage: pageSize });
+    setState({ page: 0, rowsPerPage: pageSize });
     setSelected([]);
     dispatch(resetEvents());
     dispatch(resetFilters());
   };
 
   useEffect(() => {
-    dispatch(getEvents(state.page, filters.filterApplied, status(tab), rowsPerPage));
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
+    dispatch(getEvents(state.page + 1, filters.filterApplied, status(tab), rowsPerPage));
     let check = filters.filterApplied ? false : filters.filterApplied;
     dispatch(setFilterApplied(check));
   }, [filters]);
 
   useEffect(() => {
-    if (prevTab !== tab) {
+    if (prevTab !== tab && reload == true) {
       prevTab.current = tab;
       reloadEvents();
+    }
+    else {
+      setReload(true)
     }
   }, [tab]);
 
   const handleChangePage = (event, newPage) => {
-    if (newPage > state.page) dispatch(getEvents(newPage, filters.filterApplied, status(tab), rowsPerPage));
+    if (newPage > state.page) dispatch(getEvents(newPage + 1, filters.filterApplied, status(tab), rowsPerPage));
     setState({ page: newPage, rowsPerPage: state.rowsPerPage });
     setSelected([]);
   };
@@ -217,8 +227,9 @@ export function EventsTable() {
             </div>
           )}
         </Box>
-        {listView ? (
-        <Table size="small" stickyHeader aria-label="sticky table">
+        {listView ?
+             // List View
+          (<Table size="small" stickyHeader aria-label="sticky table">
           <TableHead>
             <TableRow>
               <TableCell>
@@ -283,46 +294,48 @@ export function EventsTable() {
           ) : (
             <div className="container tc">Loading Data....</div>
           )}
-        </Table> ) : (
-            // GRID COMPONENT
-            <div>
+        </Table>)
+            :
+        (
+         <div>
+                {selectMode ? (
+            <span style={{ display: 'inline-flex', alignItems: 'center' }}>
+              <Checkbox
+                checked={events
+                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                  .map((event) => event.uuid)
+                  .every((item) => selected.includes(item))}
+                onChange={() => {
+                  if (selected.length === rowsPerPage) setSelected([]);
+                  else setSelected(events.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((event) => event.uuid));
+                }}
+              />
+              <span><h4>Select All</h4></span>
+            </span>
+          ) : null}
+          <Grid container sx={{paddingTop: 3, paddingLeft: 5, paddingRight: 5}} spacing={{ xs: 2, md: 1 }} columns={{ xs: 4, sm: 8, md: 14 }}>
+          {(rowsPerPage > 0 ? events.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage) : events).map((row, index) => (
+            <Grid item xs={2} sm={4} md={2} key={index} >
               {selectMode ? (
-          <span style={{ display: 'inline-flex', alignItems: 'center' }}>
-            <Checkbox
-              checked={events
-                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((event) => event.uuid)
-                .every((item) => selected.includes(item))}
-              onChange={() => {
-                if (selected.length === rowsPerPage) setSelected([]);
-                else setSelected(events.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((event) => event.uuid));
-              }}
-            />
-            <span><h4>Select All</h4></span>
-          </span>
-        ) : null}
-        <Grid container sx={{paddingTop: 3, paddingLeft: 5, paddingRight: 5}} spacing={{ xs: 2, md: 1 }} columns={{ xs: 4, sm: 8, md: 14 }}>
-        {(rowsPerPage > 0 ? events.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage) : events).map((row, index) => (
-          <Grid item xs={2} sm={4} md={2} key={index} >
-            {selectMode ? (
-            <Checkbox sx={{marginBottom: -6, color: "white"}}
-              checked={selected.includes(row.uuid)}
-              onChange={() => {
-                if (selected.includes(row.uuid)) {
-                  setSelected(selected.filter((item) => item !== row.uuid));
-                } else {
-                  setSelected([...selected, row.uuid]);
-                }
-              }}
-            />) : null}
-            <a target="_blank" href={row.file} style={{marginTop: 20 }}>
-               <img style={{ border: "groove", borderColor: "gray", borderRadius: 10, marginBottom: 2 }} src={row.thumbnail} height={100} />
-            </a>
-          </Grid>
-        ))}
-      </Grid>
-            </div>
-            )}
+              <Checkbox sx={{marginBottom: -6, color: "white"}}
+                checked={selected.includes(row.uuid)}
+                onChange={() => {
+                  if (selected.includes(row.uuid)) {
+                    setSelected(selected.filter((item) => item !== row.uuid));
+                  } else {
+                    setSelected([...selected, row.uuid]);
+                  }
+                }}
+              />) : null}
+              <a target="_blank" href={row.file} style={{marginTop: 20 }}>
+                 <img style={{ border: "groove", borderColor: "gray", borderRadius: 10, marginBottom: 2 }} src={row.thumbnail} height={100} />
+              </a>
+            </Grid>
+          ))}
+        </Grid>
+      </div>
+        )
+        }
       </TableContainer>
       <TablePagination
         rowsPerPageOptions={[10, 20, 50, 100]}
