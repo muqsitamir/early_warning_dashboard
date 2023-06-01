@@ -37,7 +37,6 @@ export const getLineChart = (start_date, end_date) => dispatch => {
         dispatch(setLineChart(res.data));
 
     }).catch(err => {
-        debugger;
         dispatch(setSnackBar(err.response.data.non_field_errors[0]));
     }).finally(() => {
         dispatch(showLoadingScreen(false));

@@ -10,23 +10,17 @@ export const eventsSlice = createSlice({
   initialState: {
     events: {
       count: 0,
-      next: null,
-      previous: null,
       results: [],
     },
   },
   reducers: {
     setEvents: (state, action) => {
       state.events.count = action.payload.count;
-      state.events.next = action.payload.next;
-      state.events.previous = action.payload.previous;
       state.events.results = action.payload.filterApplied ? action.payload.results : state.events.results.concat(action.payload.results);
     },
     resetEvents: (state) => {
       state.events = {
         count: 0,
-        next: null,
-        previous: null,
         results: [],
       };
     },

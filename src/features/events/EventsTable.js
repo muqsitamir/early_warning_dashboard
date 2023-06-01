@@ -29,14 +29,23 @@ import StarIcon from "@mui/icons-material/Star";
 import UnarchiveIcon from "@mui/icons-material/Unarchive";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useDispatch, useSelector } from "react-redux";
-import { getEvents, selectEvents, resetEvents, updateEventStatus, deleteEvent, annotateEvents, removeAnnotations } from "./eventsSlice";
+import {
+  getEvents,
+  selectEvents,
+  resetEvents,
+  updateEventStatus,
+  deleteEvent,
+  annotateEvents,
+  removeAnnotations,
+  setEvents
+} from "./eventsSlice";
 import { selectFilters, setFilterApplied, resetFilters } from "../filters/filterSlice";
 import { selectOrganization } from "../organization/organizationSlice";
-import { TextFormat } from "@mui/icons-material";
 
 export function EventsTable() {
   const [state, setState] = useState({ page: 0, rowsPerPage: 10 });
   const [selected, setSelected] = useState([]);
+  const [updated, setUpdated] = useState(0);
   const [selectMode, setSelectMode] = useState(false);
   const [listView, setListView] = useState(true);
   const [reload, setReload] = useState(false);
@@ -47,6 +56,8 @@ export function EventsTable() {
   const { species: allSpecies } = useSelector(selectOrganization);
   const prevTab = useRef(tab);
   const isFirstRender = useRef(true);
+  const isFirstRender2 = useRef(true);
+  const justRan = useRef(false);
   const { results: events, count } = useSelector(selectEvents);
   const filters = useSelector(selectFilters);
   const dispatch = useDispatch();
@@ -65,6 +76,7 @@ export function EventsTable() {
   };
 
   const reloadEvents = (pageSize = 10) => {
+    justRan.current = false;
     setState({ page: 0, rowsPerPage: pageSize });
     setSelected([]);
     dispatch(resetEvents());
@@ -76,10 +88,24 @@ export function EventsTable() {
       isFirstRender.current = false;
       return;
     }
+    if (justRan.current) {
+      justRan.current = false;
+      return;
+    }
+    debugger
     dispatch(getEvents(state.page + 1, filters.filterApplied, status(tab), rowsPerPage));
+    justRan.current = true;
     let check = filters.filterApplied ? false : filters.filterApplied;
     dispatch(setFilterApplied(check));
   }, [filters]);
+
+  useEffect(() => {
+    if (isFirstRender2.current) {
+      isFirstRender2.current = false;
+      return;
+    }
+    dispatch(getEvents(state.page + 1, filters.filterApplied, status(tab), rowsPerPage));
+  }, [updated]);
 
   useEffect(() => {
     if (prevTab !== tab && reload == true) {
@@ -91,8 +117,16 @@ export function EventsTable() {
     }
   }, [tab]);
 
+
+  useEffect(() => {
+    if(selectMode == false){
+      setSelected([]);
+    }
+  }, [selectMode]);
+
   const handleChangePage = (event, newPage) => {
-    if (newPage > state.page) dispatch(getEvents(newPage + 1, filters.filterApplied, status(tab), rowsPerPage));
+    // debugger
+    if (newPage > state.page && newPage + 1 > events.length/rowsPerPage) dispatch(getEvents(newPage + 1, filters.filterApplied, status(tab), rowsPerPage));
     setState({ page: newPage, rowsPerPage: state.rowsPerPage });
     setSelected([]);
   };
@@ -107,7 +141,7 @@ export function EventsTable() {
     } else {
       dispatch(updateEventStatus(selected, "restore"));
     }
-    reloadEvents();
+    setSelected([])
   };
 
   const handleStar = () => {
@@ -116,28 +150,35 @@ export function EventsTable() {
     } else {
       dispatch(updateEventStatus(selected, "restore"));
     }
-    reloadEvents();
+    setSelected([])
   };
 
   const handleDelete = () => {
     dispatch(deleteEvent(selected));
     setShowDeleteConfirmation(false);
-    reloadEvents();
+    setSelected([]);
+    dispatch(setEvents({results: events.slice(0, events.length - rowsPerPage), count: count, filterApplied: true}))
+    setUpdated(updated+1)
   };
 
   const handleAnnotate = () => {
     dispatch(annotateEvents(selected, selectedAnnotations));
     setShowAnnotateMenu(false);
-    reloadEvents();
+    setSelected([]);
+    dispatch(setEvents({results: events.slice(0, events.length - rowsPerPage), count: count, filterApplied: true}))
+    setUpdated(updated+1)
   };
 
   const handleUnAnnotate = () => {
     dispatch(removeAnnotations(selected, selectedAnnotations));
     setShowAnnotateMenu(false);
-    reloadEvents();
+    setSelected([]);
+    dispatch(setEvents({results: events.slice(0, events.length - rowsPerPage), count: count, filterApplied: true}))
+    setUpdated(updated+1)
   }
 
   const { page, rowsPerPage } = state;
+
   return (
     <Paper className="mb4">
       <Dialog
