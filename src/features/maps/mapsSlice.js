@@ -28,7 +28,7 @@ export const getCameraNodes = () => dispatch => {
     axios.get(`${backend_url}/core/api/camera/`, config).then(res => {
         dispatch(setMaps(res.data));
     }).catch(err => {
-        dispatch(setSnackBar(err.response.data.non_field_errors[0]));
+        dispatch(setSnackBar(err.message));
     }).finally(() => {
         dispatch(showLoadingScreen(false));
     });

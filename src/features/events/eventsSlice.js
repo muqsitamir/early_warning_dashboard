@@ -51,7 +51,7 @@ export const getEvents =
         dispatch(setEvents(res.data));
       })
       .catch((err) => {
-        dispatch(setSnackBar(err.response.data.non_field_errors[0]));
+        dispatch(setSnackBar(err.message));
       })
       .finally(() => {
         dispatch(showLoadingScreen(false));
@@ -77,7 +77,7 @@ export const updateEventStatus = (eventIds, action) => (dispatch, getState) => {
       dispatch(setSnackBar(res.data.message));
     })
     .catch((err) => {
-      dispatch(setSnackBar(err.response.data.non_field_errors[0]));
+      dispatch(setSnackBar(err.message));
     })
     .finally(() => {
       dispatch(showLoadingScreen(false));
@@ -100,7 +100,7 @@ export const deleteEvent = (eventIds) => (dispatch, getState) => {
       dispatch(setSnackBar(res.data.message));
     })
     .catch((err) => {
-      dispatch(setSnackBar(err.response.data.non_field_errors[0]));
+      dispatch(setSnackBar(err.message));
     })
     .finally(() => {
       dispatch(showLoadingScreen(false));
@@ -125,7 +125,7 @@ export const annotateEvents = (eventIds, annotations) => (dispatch, getState) =>
       dispatch(setSnackBar(res.data.message));
     })
     .catch((err) => {
-      dispatch(setSnackBar(err.response.data.non_field_errors[0]));
+      dispatch(setSnackBar(err.message));
     })
     .finally(() => {
       dispatch(showLoadingScreen(false));
@@ -150,7 +150,7 @@ export const removeAnnotations = (eventIds, annotations) => (dispatch, getState)
       dispatch(setSnackBar(res.data.message));
     })
     .catch((err) => {
-      dispatch(setSnackBar(err.response.data.non_field_errors[0]));
+      dispatch(setSnackBar(err.message));
     })
     .finally(() => {
       dispatch(showLoadingScreen(false));

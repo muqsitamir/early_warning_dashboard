@@ -45,7 +45,6 @@ import { selectOrganization } from "../organization/organizationSlice";
 export function EventsTable() {
   const [state, setState] = useState({ page: 0, rowsPerPage: 10 });
   const [selected, setSelected] = useState([]);
-  const [updated, setUpdated] = useState(0);
   const [selectMode, setSelectMode] = useState(false);
   const [listView, setListView] = useState(true);
   const [reload, setReload] = useState(false);
@@ -56,7 +55,6 @@ export function EventsTable() {
   const { species: allSpecies } = useSelector(selectOrganization);
   const prevTab = useRef(tab);
   const isFirstRender = useRef(true);
-  const isFirstRender2 = useRef(true);
   const justRan = useRef(false);
   const { results: events, count } = useSelector(selectEvents);
   const filters = useSelector(selectFilters);
@@ -80,7 +78,7 @@ export function EventsTable() {
     setState({ page: 0, rowsPerPage: pageSize });
     setSelected([]);
     dispatch(resetEvents());
-    dispatch(resetFilters());
+    showChanges(true);
   };
 
   useEffect(() => {
@@ -92,20 +90,11 @@ export function EventsTable() {
       justRan.current = false;
       return;
     }
-    debugger
     dispatch(getEvents(state.page + 1, filters.filterApplied, status(tab), rowsPerPage));
     justRan.current = true;
     let check = filters.filterApplied ? false : filters.filterApplied;
     dispatch(setFilterApplied(check));
   }, [filters]);
-
-  useEffect(() => {
-    if (isFirstRender2.current) {
-      isFirstRender2.current = false;
-      return;
-    }
-    dispatch(getEvents(state.page + 1, filters.filterApplied, status(tab), rowsPerPage));
-  }, [updated]);
 
   useEffect(() => {
     if (prevTab !== tab && reload == true) {
@@ -123,6 +112,19 @@ export function EventsTable() {
       setSelected([]);
     }
   }, [selectMode]);
+
+  const showChanges = async (tabChange = false) => {
+    if(!tabChange) {
+      if (events.length <= rowsPerPage) {
+        dispatch(resetEvents());
+      } else {
+        dispatch(setEvents({results: events.slice(0, rowsPerPage * page), count: count, filterApplied: true}))
+      }
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+    }
+
+    dispatch(getEvents(state.page + 1, filters.filterApplied, status(tab), rowsPerPage));
+  };
 
   const handleChangePage = (event, newPage) => {
     // debugger
@@ -142,6 +144,9 @@ export function EventsTable() {
       dispatch(updateEventStatus(selected, "restore"));
     }
     setSelected([])
+    if(tab == 2 || tab == 1){
+      showChanges();
+    }
   };
 
   const handleStar = () => {
@@ -151,30 +156,30 @@ export function EventsTable() {
       dispatch(updateEventStatus(selected, "restore"));
     }
     setSelected([])
+    if(tab == 2 || tab == 1){
+      showChanges();
+    }
   };
 
   const handleDelete = () => {
     dispatch(deleteEvent(selected));
     setShowDeleteConfirmation(false);
     setSelected([]);
-    dispatch(setEvents({results: events.slice(0, events.length - rowsPerPage), count: count, filterApplied: true}))
-    setUpdated(updated+1)
+    showChanges();
   };
 
   const handleAnnotate = () => {
     dispatch(annotateEvents(selected, selectedAnnotations));
     setShowAnnotateMenu(false);
     setSelected([]);
-    dispatch(setEvents({results: events.slice(0, events.length - rowsPerPage), count: count, filterApplied: true}))
-    setUpdated(updated+1)
+    showChanges();
   };
 
   const handleUnAnnotate = () => {
     dispatch(removeAnnotations(selected, selectedAnnotations));
     setShowAnnotateMenu(false);
     setSelected([]);
-    dispatch(setEvents({results: events.slice(0, events.length - rowsPerPage), count: count, filterApplied: true}))
-    setUpdated(updated+1)
+    showChanges();
   }
 
   const { page, rowsPerPage } = state;

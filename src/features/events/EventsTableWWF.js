@@ -15,7 +15,6 @@ import {getEvents, selectEvents} from "./eventsSlice";
 import {selectFilters, setFilterApplied} from "../filters/filterSlice";
 
 export function EventsTableWWF(){
-
     const [state, setState] = useState({page: 0, rowsPerPage: 10});
     const {results: events, count} = useSelector(selectEvents);
     const filters = useSelector(selectFilters);

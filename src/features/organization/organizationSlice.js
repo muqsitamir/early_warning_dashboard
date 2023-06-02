@@ -30,7 +30,7 @@ export const getOrganization = () => dispatch => {
     axios.get(`${backend_url}/core/api/organization/`, config).then((res) => {
         dispatch(setOrganization(res.data));
     }).catch((err) => {
-        dispatch(setSnackBar(err.response.data.non_field_errors[0]));
+        dispatch(setSnackBar(err.message));
     }).finally(() => {
         dispatch(showLoadingScreen(false));
     })
