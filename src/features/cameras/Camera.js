@@ -10,6 +10,7 @@ import Box from "@mui/material/Box";
 export default function Camera(props){
     let content = props.content;
     let live = content.live ? "success" : "disabled";
+    debugger
     return(
         <Box
           sx={{
@@ -35,8 +36,8 @@ export default function Camera(props){
                 <CardMedia
                 component="img"
                 height="194"
-                image={require('../../images/placeholder.jpg')}
-                alt="Camera Image"
+                src={props.latestEvent}
+                alt="Event gif not available yet"
                 />
                 <div>
                     <div className='camera-info' >

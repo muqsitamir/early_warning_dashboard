@@ -5,6 +5,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {getCameras, selectCameras} from "../features/cameras/cameraSlice";
 import {selectSiteData} from "../reusable_components/site_data/siteDataSlice";
 import SideNav from "../Headers/SideNav/SideNav";
+import {backend_url} from "../App";
 
 
 
@@ -28,9 +29,10 @@ export default function Cameras() {
                     </header>
                     <div className='grid-div-mobile grid-div'>
                         <Grid container justify="center" spacing={2}>
-                            {cameras.map((camera) => (
-                                <Camera content={camera}/>
-                            ))}
+                            {cameras.map((camera) => {
+                                const latest_event = camera.latest_event ? `${backend_url}/media/events/${camera.latest_event}.gif` : 'https://storage.googleapis.com/proudcity/mebanenc/uploads/2021/03/placeholder-image-300x225.png';
+                                return <Camera content={camera} latestEvent={latest_event} />;
+                            })}
                         </Grid>
                     </div>
                 </div>
