@@ -73,13 +73,13 @@ export function EventsTable() {
     }
   };
 
-  const reloadEvents = (pageSize = 10) => {
-    justRan.current = false;
-    setState({ page: 0, rowsPerPage: pageSize });
+  const { page, rowsPerPage } = state;
+
+  useEffect(() => {
     setSelected([]);
     dispatch(resetEvents());
     showChanges(true);
-  };
+  }, [rowsPerPage]);
 
   useEffect(() => {
     if (isFirstRender.current) {
@@ -122,19 +122,25 @@ export function EventsTable() {
       }
       await new Promise((resolve) => setTimeout(resolve, 1000));
     }
-
     dispatch(getEvents(state.page + 1, filters.filterApplied, status(tab), rowsPerPage));
   };
 
+  const reloadEvents = (pageSize = 10) => {
+    justRan.current = false;
+    setState({ page: 0, rowsPerPage: pageSize });
+    setSelected([]);
+    dispatch(resetEvents());
+    showChanges(true);
+  };
+
   const handleChangePage = (event, newPage) => {
-    // debugger
     if (newPage > state.page && newPage + 1 > events.length/rowsPerPage) dispatch(getEvents(newPage + 1, filters.filterApplied, status(tab), rowsPerPage));
     setState({ page: newPage, rowsPerPage: state.rowsPerPage });
     setSelected([]);
   };
 
   const handleChangeRowsPerPage = (event) => {
-    reloadEvents(parseInt(event.target.value, 10));
+    setState({ page: 0, rowsPerPage: parseInt(event.target.value, 10) });
   };
 
   const handleArchive = () => {
@@ -181,8 +187,6 @@ export function EventsTable() {
     setSelected([]);
     showChanges();
   }
-
-  const { page, rowsPerPage } = state;
 
   return (
     <Paper className="mb4">
