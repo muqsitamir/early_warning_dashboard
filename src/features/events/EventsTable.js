@@ -298,7 +298,7 @@ export function EventsTable() {
               <TableCell>Event</TableCell>
               <TableCell>Specie</TableCell>
               <TableCell>Created At</TableCell>
-              <TableCell>Updated At</TableCell>
+              <TableCell>Confidence</TableCell>
               <TableCell>Date</TableCell>
               <TableCell>Camera</TableCell>
             </TableRow>
@@ -334,7 +334,7 @@ export function EventsTable() {
                       ))}
                     </TableCell>
                     <TableCell>{row.created_at}</TableCell>
-                    <TableCell>{row.updated_at}</TableCell>
+                    <TableCell>{row.confidence}</TableCell>
                     <TableCell>{row.date}</TableCell>
                     <TableCell>{row.camera_name}</TableCell>
                   </TableRow>

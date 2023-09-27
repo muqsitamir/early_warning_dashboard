@@ -17,6 +17,7 @@ import Cameras from "./pages/Cameras";
 import OnlyPublicRoute from "./Authentication/OnlyPublicRoute";
 
 export const backend_url = 'https://api.tpilums.org.pk'
+// export const backend_url = 'http://0.0.0.0:8000'
 
 
 export default function App () {
