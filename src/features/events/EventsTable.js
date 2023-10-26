@@ -59,6 +59,7 @@ export function EventsTable() {
   const { results: events, count } = useSelector(selectEvents);
   const filters = useSelector(selectFilters);
   const dispatch = useDispatch();
+  const isFirstRun = useRef(true);
 
   const status = (tab) => {
     switch (tab) {
@@ -76,6 +77,10 @@ export function EventsTable() {
   const { page, rowsPerPage } = state;
 
   useEffect(() => {
+    if (isFirstRun.current) {
+      isFirstRun.current = false;
+      return;
+    }
     setSelected([]);
     dispatch(resetEvents());
     showChanges(true);
