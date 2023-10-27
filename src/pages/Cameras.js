@@ -1,42 +1,54 @@
-import React, {useEffect} from 'react';
+import React, { useEffect, useState } from 'react';
 import { Grid } from '@mui/material';
-import Camera from "../features/cameras/Camera";
-import {useDispatch, useSelector} from "react-redux";
-import {getCameras, selectCameras} from "../features/cameras/cameraSlice";
-import {selectSiteData} from "../reusable_components/site_data/siteDataSlice";
-import SideNav from "../Headers/SideNav/SideNav";
-import {backend_url} from "../App";
+import Camera from '../features/cameras/Camera';
+import { useDispatch, useSelector } from 'react-redux';
+import { getCameras, selectCameras } from '../features/cameras/cameraSlice';
+import { selectSiteData } from '../reusable_components/site_data/siteDataSlice';
+import SideNav from '../Headers/SideNav/SideNav';
+import { backend_url } from '../App';
 
-
-
+import CSVChart from '../features/Charts/CSVChart';
+import Chart from '../features/Charts/Chart';
 export default function Cameras() {
-    const { side_nav: side_nav_check } = useSelector(selectSiteData);
-    let side_nav = side_nav_check ? <SideNav/> : null;
-    const dispatch = useDispatch();
-    useEffect(() => {
-        dispatch(getCameras())
-    }, []);
-    const {results: cameras} = useSelector(selectCameras);
-    return(
-        <div className="page">
-            <div className="page__content">
-                <div className="main-wrapper">
-                    {side_nav}
-                    <header className="row db" style={{marginTop: 25, marginLeft: '10%'}}>
-                        <div className="col s12">
-                            <h1 className="bold">Cameras</h1>
-                        </div>
-                    </header>
-                    <div className='grid-div-mobile grid-div'>
-                        <Grid container justify="center" spacing={2}>
-                            {cameras.map((camera) => {
-                                const latest_event = camera.latest_event ? `${backend_url}/media/events/${camera.latest_event}.gif` : 'https://storage.googleapis.com/proudcity/mebanenc/uploads/2021/03/placeholder-image-300x225.png';
-                                return <Camera content={camera} latestEvent={latest_event} />;
-                            })}
-                        </Grid>
-                    </div>
-                </div>
+  const { side_nav: side_nav_check } = useSelector(selectSiteData);
+  let side_nav = side_nav_check ? <SideNav /> : null;
+
+  
+
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(getCameras());
+  }, []);
+
+  const { results: cameras } = useSelector(selectCameras);
+
+  return (
+    <div className="page">
+      <div className="page__content">
+        <div className="main-wrapper">
+          {side_nav}
+          <header className="row db" style={{ marginTop: 25, marginLeft: '10%' }}>
+            <div className="col s12">
+              <h1 className="bold">Cameras</h1>
             </div>
+          </header>
+          <div className='grid-div-mobile grid-div'>
+            <Grid container justify="center" spacing={2}>
+              {cameras.map((camera) => {
+                const latest_event = camera.latest_event ? `${backend_url}/media/events/${camera.latest_event}.gif` : 'https://storage.googleapis.com/proudcity/mebanenc/uploads/2021/03/placeholder-image-300x225.png';
+                return (
+                  <Camera
+                    content={camera}
+                    latestEvent={latest_event}
+                  />
+                );
+              })}
+            </Grid>
+           
+           
+          </div>
         </div>
-    );
+      </div>
+    </div>
+  );
 }

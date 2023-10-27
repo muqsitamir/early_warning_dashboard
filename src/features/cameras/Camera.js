@@ -1,17 +1,17 @@
-import React from "react";
+import React ,{useState}from "react";
 import FiberManualRecordIcon from '@mui/icons-material/FiberManualRecord';
 import Typography from '@mui/material/Typography';
-import {CardMedia} from "@mui/material";
+import {CardMedia,CardActions,Button} from "@mui/material";
 import Paper from "@mui/material/Paper";
 import Box from "@mui/material/Box";
-
+import CameraDetailsPage from "../../pages/CameraDetailsPage";
+import {Link} from 'react-router-dom';
 
 
 export default function Camera(props){
     let content = props.content;
     let live = content.live ? "success" : "disabled";
-    debugger
-    return(
+   return(
         <Box
           sx={{
             display: 'flex',
@@ -109,6 +109,12 @@ export default function Camera(props){
                                 {content.sunset}
                             </Typography>
                         </div>
+                        <CardActions>
+  <Button size="small" color="primary" component={Link} to={`/statistics/${content.id}`}>
+    View Details
+  </Button>
+</CardActions>
+        
                     </div>
                 </div>
           </Paper>
