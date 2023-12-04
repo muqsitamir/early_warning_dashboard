@@ -27,6 +27,15 @@ export const filterSlice = createSlice({
       state.range = action.payload;
     },
     setCameras: (state, action) => {
+      for(let i=0; i<action.payload.length; i++){
+        if(typeof action.payload[i] == 'object'){
+          let merged_ids = action.payload[i];
+          action.payload.splice(i, 1);
+          action.payload.push(merged_ids[0]);
+          action.payload.push(merged_ids[1]);
+        }
+      }
+      debugger;
       state.cameras = action.payload;
     },
     setSpecies: (state, action) => {

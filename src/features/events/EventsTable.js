@@ -82,8 +82,11 @@ export function EventsTable() {
       return;
     }
     setSelected([]);
+    debugger
     dispatch(resetEvents());
+    debugger
     showChanges(true);
+    debugger
   }, [rowsPerPage]);
 
   useEffect(() => {
@@ -127,6 +130,7 @@ export function EventsTable() {
       }
       await new Promise((resolve) => setTimeout(resolve, 1000));
     }
+    debugger
     dispatch(getEvents(state.page + 1, filters.filterApplied, status(tab), rowsPerPage));
   };
 

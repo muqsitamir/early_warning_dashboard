@@ -1,19 +1,48 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {Dialog, Stack, TextField} from "@mui/material";
 import DatePicker from "../../reusable_components/DatePicker";
 import {useDispatch, useSelector} from "react-redux";
 import {setCameras, setDateRange, setSpecies, setFilterApplied, setTimeRange} from "./filterSlice";
 import MultiSelect from "../../reusable_components/MultiSelect";
-import {selectOrganization} from "../organization/organizationSlice";
+import {getOrganization, selectOrganization} from "../organization/organizationSlice";
 import FilterListIcon from '@mui/icons-material/FilterList';
 import {DesktopTimePicker, LocalizationProvider} from "@mui/x-date-pickers-pro";
 import {AdapterDateFns} from "@mui/x-date-pickers-pro/AdapterDateFns";
 
 
 export function Filters() {
-    const [state, setState] = useState({open: false});
     const {cameras:availCameras, species:availSpecies} = useSelector(selectOrganization);
-    const cameraItems = availCameras.map((v,i)=>({key:v.id,value:v.description}));
+    const [availCameras2, setAvailCameras2] = useState([]);
+
+
+    useEffect(() => {
+        let check = false;
+        let Cameras2 = [];
+        for(let i=0; i < availCameras.length; i++){
+            for(let j=0; j < availCameras.length; j++) {
+                if (availCameras[i]['description'].slice(5,) == availCameras[j]['description']){
+                    if(check != true){
+                        check = true;
+                    }
+                    Cameras2.push({
+                        id: [availCameras[i]['id'], availCameras[j]['id']],
+                        description: availCameras[j]["description"]
+                    })
+                    }
+                }
+            if(check == false && Cameras2.length < 7){
+                Cameras2.push({
+                        id: availCameras[i]['id'],
+                        description: availCameras[i]["description"]
+                })
+                }
+            check = false;
+            }
+        setAvailCameras2(Cameras2);
+    }, [availCameras]);
+
+    const cameraItems = availCameras2.map((v,i)=>({key:v.id,value:v.description}));
+    const [state, setState] = useState({open: false});
     const speciesItems = availSpecies.map((v,i)=>({key:v.id,value:v.name}));
     const dispatch = useDispatch();
     const [newRange, setNewRange] = useState({
@@ -25,6 +54,7 @@ export function Filters() {
     const [endTime, setEndTime] = useState(new Date('2018-01-01T19:00:00.000Z'));
     const [newCameras, setNewCameras] = useState([]);
     const [newSpecies, setNewSpecies] = useState([]);
+
 
     const handleClose = () => {
         setState({open: false})
