@@ -18,6 +18,7 @@ import OnlyPublicRoute from "./Authentication/OnlyPublicRoute";
 import CameraDetailsPage from './pages/CameraDetailsPage';
 export const backend_url = 'https://api.tpilums.org.pk'
 // export const backend_url = 'http://0.0.0.0:8000'
+export const googleMapsApiKey='AIzaSyBup6K7zk3Hp7u53HmAVCMwqeEfFCEf70Q';
 
 
 export default function App () {

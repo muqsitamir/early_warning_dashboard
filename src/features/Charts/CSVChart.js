@@ -162,7 +162,8 @@ function CSVChart({ selectedCamera, selectedField }) {
 
   return (
     <div>
-      <div>
+      
+      <div style={{margin:'10px'}}><label style={{marginRight:'10px'}}>Selete a Date</label>
       <DatePicker
           selected={selectedDate}
           onChange={handleDateChange}

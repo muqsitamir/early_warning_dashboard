@@ -76,13 +76,65 @@ function Chart() {
         hourlyAverages[i].trend = 'charging';
       } else if (hourlyAveragePoints[i].y < hourlyAveragePoints[i - 1].y) {
         hourlyAverages[i].trend = 'discharging';
-      }
+      }  
     }
-    const dataPoints = filteredData.map((row, index) => ({
+     
+    let lowestVolts = Infinity; // Initialize to positive infinity
+    let lowestVoltsTimestamp = null;
+    let highestVolts = -Infinity; // Initialize to negative infinity
+    let highestVoltsTimestamp = null;
+
+    hourlyAveragePoints.forEach((point) => {
+      const volts = point.y;
+      const timestamp = point.x;
+
+      if (!isNaN(volts) && volts !== 0) {
+        if (volts < lowestVolts) {
+          lowestVolts = volts;
+          lowestVoltsTimestamp = timestamp;
+        }
+        if (volts > highestVolts) {
+          highestVolts = volts;
+          highestVoltsTimestamp = timestamp;
+        }
+      }
+    });
+
+    console.log(`Lowest volts of the day: ${lowestVolts}`);
+    console.log(`Highest volts of the day: ${highestVolts}`);
+
+    // Calculate the time duration between lowest and highest volts
+    let voltsDuration = null;
+    if (lowestVoltsTimestamp && highestVoltsTimestamp) {
+      voltsDuration = (highestVoltsTimestamp - lowestVoltsTimestamp) / (1000 * 60 * 60); // Duration in hours
+    }
+
+    console.log(`Time duration between lowest and highest volts: ${voltsDuration} hours`);
+
+    let nextLowestVolts = Infinity;
+    let nextLowestVoltsTimestamp = null;
+
+    hourlyAveragePoints.forEach((point) => {
+      const volts = point.y;
+      const timestamp = point.x;
+
+      if (!isNaN(volts) && volts !== 0 && timestamp > highestVoltsTimestamp) {
+        if (volts < nextLowestVolts) {
+          nextLowestVolts = volts;
+          nextLowestVoltsTimestamp = timestamp;
+        }
+      }
+    });
+    // Calculate the time duration between lowest and highest volts
+    let voltsDuration1 = null;
+    if (nextLowestVoltsTimestamp && highestVoltsTimestamp) {
+      voltsDuration1 = (nextLowestVoltsTimestamp-highestVoltsTimestamp) / (1000 * 60 * 60); // Duration in hours
+    }
+   /* const dataPoints = filteredData.map((row, index) => ({
       x: new Date(row.Date_Time).getTime(),
       y: parseFloat(row.Volts),
       //color: index > 0 && row.Volts < parseFloat(filteredData[index - 1].Volts) ? 'red' : 'green',
-    }));
+    }));*/
 // Create a data series for charging and discharging trends
 const trendData = hourlyAverages.map((hourlyData, hour) => {
   const average = hourlyAveragePoints[hour].y;
@@ -105,7 +157,7 @@ const trendData = hourlyAverages.map((hourlyData, hour) => {
         type: 'line',
       },
       title: {
-        text: `Karimabad Data for ${selectedDay}`,
+        text: `Time and Voltage `
       },
       xAxis: {
         type: 'datetime',
@@ -177,6 +229,17 @@ const trendData = hourlyAverages.map((hourlyData, hour) => {
       <div>
         
         <HighchartsReact highcharts={Highcharts} options={options} />
+        <div style={{    display: 'flex',alignItems: 'center',justifyContent: 'space-around'}}>   
+        <div><strong>Charging Periods:</strong>
+        <div>
+        {format(lowestVoltsTimestamp, 'HH:mm')} - {format(highestVoltsTimestamp, 'HH:mm')} ({voltsDuration} hours)
+        </div>
+        </div>
+        <div><strong>Usage Periods:</strong>
+        <div>
+        {format(highestVoltsTimestamp, 'HH:mm')} - {format(nextLowestVoltsTimestamp, 'HH:mm')} ({voltsDuration1} hours)
+        </div>
+        </div> </div>
       </div>
     );
   };
@@ -187,7 +250,7 @@ const trendData = hourlyAverages.map((hourlyData, hour) => {
 
   return (
     <div>
-      <div>
+      <div style={{margin:'10px'}}><label style={{marginRight:'10px'}}>Selete a Date</label>
         <DatePicker
           selected={selectedDate}
           onChange={handleDateChange}
@@ -199,6 +262,7 @@ const trendData = hourlyAverages.map((hourlyData, hour) => {
         />
       </div>
       {renderChart()}
+      
     </div>
   );
 }
