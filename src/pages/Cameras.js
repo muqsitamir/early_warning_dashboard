@@ -17,7 +17,7 @@ export default function Cameras() {
   
   const { results: cameras } = useSelector(selectCameras);
   const cameraCount = cameras.length;
- let location={ lat: 33.734457, lng: 73.045045 }
+  let location={ lat: 33.734457, lng: 73.045045 }
   const [center, setCenter] = useState({
    center:location,
     zoom: 5      
@@ -58,7 +58,7 @@ export default function Cameras() {
     }
     gridData.push(row);
   }
-
+    debugger
   return (
     <div className="page">
       <div className="page__content">
@@ -77,13 +77,13 @@ export default function Cameras() {
         <Grid container item justify="center" key={rowIndex}>
           {row.map((camera, colIndex) => {
             if (colIndex === 2) {
-              return (
-                <Grid item key={colIndex}>
-                  <div style={{width:'750px',height:'270px',marginTop: '10px',marginLeft:'12px'}}>
-                    
-                  <MiniMap camera={cameras} defaultCenter={center}/> {/* Include the GoogleMap component here */}
-                  </div>
-                </Grid>
+              return ( null
+                // <Grid item key={colIndex}>
+                //   <div style={{width:'750px',height:'270px',marginTop: '10px',marginLeft:'12px'}}>
+                //
+                //   <MiniMap camera={cameras} defaultCenter={center}/> {/* Include the GoogleMap component here */}
+                //   </div>
+                // </Grid>
               );
             } else {
               return (
@@ -91,10 +91,9 @@ export default function Cameras() {
                   {camera && (
                   <Camera
                   content={camera}
-                  latestEvent={camera.latest_event ? `${backend_url}/media/events/${camera.latest_event}.gif` : 'https://storage.googleapis.com/proudcity/mebanenc/uploads/2021/03/placeholder-image-300x225.png'}
+                  latestEvent={camera.latest_event ? `${backend_url}/media/${camera.latest_event}` : 'https://storage.googleapis.com/proudcity/mebanenc/uploads/2021/03/placeholder-image-300x225.png'}
                   updateMapCenter={updateMapCenter} // Pass the function
                 />
-                 
                   )}
                 </Grid>
               );

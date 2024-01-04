@@ -9,6 +9,7 @@ import {Link} from 'react-router-dom';
 
 
 export default function Camera(props){
+    debugger
     let content = props.content;
     let live = content.live ? "success" : "disabled";
 let location='Lat:'+content.latitude+' ,Lng:'+content.longitude;
@@ -56,9 +57,9 @@ let location='Lat:'+content.latitude+' ,Lng:'+content.longitude;
                 </Typography>
                 <Typography  style={{borderTop:'groove',borderBottom:'groove',display:'flex',justifyContent:'center',marginBottom:'5px'}}><span  style={{fontSize:'12px'}}>{getDate(content.created_at)}</span>   </Typography>               
                <div style={{display: 'flex',alignItems: 'center', justifyContent: 'center'}}>
-               {props.latestEvent === 'https://storage.googleapis.com/proudcity/mebanenc/uploads/2021/03/placeholder-image-300x225.png' ||null? (
+               {props.latestEvent === 'https://storage.googleapis.com/proudcity/mebanenc/uploads/2021/03/placeholder-image-300x225.png' || props.latestEvent == null ? (
   <img
-    src='/video.png' // Replace with the path to your black image
+    src='/video.png'
     alt=""
     className="card-img-top time"
     style={{
@@ -76,9 +77,6 @@ let location='Lat:'+content.latitude+' ,Lng:'+content.longitude;
       width: '150px',
       height: '150px',
       borderRadius: '15px'
-    }}
-    onError={(e) => {
-      e.target.src = '/video.png'; // Replace with the path to your black image
     }}
   />
 )} </div>
