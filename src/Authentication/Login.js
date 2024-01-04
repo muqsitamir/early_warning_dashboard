@@ -72,8 +72,10 @@ class Login extends Form {
                         <div className="shadow-0 pa3 auth_page-auth">
 
                             {/* */}
-                            <div className="mb4 mt3">
-                                <img className="w-20 h-20" src={require("../images/wwf_logo.png")} alt=""/>
+                            <div className="mb4 mt3" style={{display:'flex',flexDirection:'column',justifyContent:'center',alignItems:'center'}}>
+                                <img className="w-20 h-20" src={require("../images/wwf_logo.png")} alt="" style={{width:'16%'}}/>
+                                <img className="w-20 h-20" src={require("../images/LUMS.png")} alt="" style={{width:'25%'}}/>
+                                
                                 <h4>Sign in to your account</h4>
                             </div>
                             {/* */}

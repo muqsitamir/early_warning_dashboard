@@ -27,20 +27,48 @@ export const cameraSlice = createSlice({
 })
 
 const Header = {};
-export const getCameras = () => (dispatch, getState) => {
+export const getCameras = (url = `${backend_url}/core/api/camera/`) => (dispatch, getState) => {
+  const allCameras = []; // Initialize an empty array to store all camera data
+
+  const fetchData = (url) => {
     dispatch(showLoadingScreen(true));
     Header['Authorization'] = `Token ${localStorage.getItem("token")}`;
     let config = {
-        headers: Header,
+      headers: Header,
     };
-    axios.get(`${backend_url}/core/api/camera/`, config).then((res) => {
-        dispatch(setCameras(res.data));
-    }).catch((err) => {
+
+    axios
+      .get(url, config)
+      .then((res) => {
+       // allCameras.push(res.data.results); // Add the data from the current page to the array
+          res.data.results.forEach(element => {
+            allCameras.push(element)
+          });
+
+          
+        if (res.data.next) {
+          // If there's a 'next' link, call the function recursively with the next URL
+          fetchData(res.data.next);
+        } else {
+          // If there's no more 'next' link, dispatch the entire array of data
+          dispatch(setCameras({
+            count: allCameras.length,
+            next: null,
+            previous: null,
+            results: allCameras
+          }));
+        }
+      })
+      .catch((err) => {
         dispatch(setSnackBar(err.response.data.non_field_errors[0]));
-    }).finally(() => {
+      })
+      .finally(() => {
         dispatch(showLoadingScreen(false));
-    })
-}
+      });
+  };
+
+  fetchData(url);
+};
 
 
 // Action creators are generated for each case reducer function
