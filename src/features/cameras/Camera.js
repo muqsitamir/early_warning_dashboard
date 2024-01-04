@@ -78,7 +78,7 @@ let location='Lat:'+content.latitude+' ,Lng:'+content.longitude;
                 <Tooltip title={location} placement="top">
                 <Button size="small"  component="span" style={{ border: '1px solid',color:'black',opacity:'0.8' ,fontSize:'12px'}}
                  onClick={() => {
-                  scrollToTop(); // Scroll to the top of the page
+                  scrollToTop();
                   props.updateMapCenter(content.latitude, content.longitude); // Call the original function
                 }}>
                 <LocationOnIcon/>Location
