@@ -6,11 +6,12 @@ import LeaderboardIcon from '@mui/icons-material/Leaderboard';
 import {Button,Tooltip} from "@mui/material";
 //import CameraDetailsPage from "../../pages/CameraDetailsPage";
 import {Link} from 'react-router-dom';
+import {backend_url} from "../../App";
 
 
 export default function Camera(props){
-    debugger
     let content = props.content;
+    let latest = `${backend_url}/media/${props.content.latest_event}`;
     let live = content.live ? "success" : "disabled";
 let location='Lat:'+content.latitude+' ,Lng:'+content.longitude;
     const getDate=(dateString)=>{
@@ -43,7 +44,7 @@ let location='Lat:'+content.latitude+' ,Lng:'+content.longitude;
       
         return formattedDate;
       } 
-      
+      debugger
    return(
        <div className="card rounded my-3 shadow-lg back-card" style={{width:"230px",margin:'10px',height:"fit-content",maxHeight: '460px'}}>
         <Typography variant="subtitle2" gutterBottom component="div" marginTop={1} marginLeft={2} style={{display: 'inline-flex',
@@ -57,9 +58,8 @@ let location='Lat:'+content.latitude+' ,Lng:'+content.longitude;
                 </Typography>
                 <Typography  style={{borderTop:'groove',borderBottom:'groove',display:'flex',justifyContent:'center',marginBottom:'5px'}}><span  style={{fontSize:'12px'}}>{getDate(content.created_at)}</span>   </Typography>               
                <div style={{display: 'flex',alignItems: 'center', justifyContent: 'center'}}>
-               {props.latestEvent === 'https://storage.googleapis.com/proudcity/mebanenc/uploads/2021/03/placeholder-image-300x225.png' || props.latestEvent == null ? (
   <img
-    src='/video.png'
+    src={latest}
     alt=""
     className="card-img-top time"
     style={{
@@ -67,19 +67,11 @@ let location='Lat:'+content.latitude+' ,Lng:'+content.longitude;
       height: '150px',
       borderRadius: '15px'
     }}
-  />
-) : (
-  <img
-    src={props.latestEvent}
-    alt=""
-    className="card-img-top time"
-    style={{
-      width: '150px',
-      height: '150px',
-      borderRadius: '15px'
+    onError={(e) => {
+      e.target.src = '/video.png'; // Replace with the path to your black image
     }}
   />
-)} </div>
+               </div>
                
                
                 <div style={{display: 'flex',alignItems: 'center', justifyContent: 'space-around',margin:'5px'}}>
