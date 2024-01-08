@@ -89,7 +89,7 @@ export function EventsTableWWF(){
     const handleChangeRowsPerPage = (event) => {
         setState({rowsPerPage: parseInt(event.target.value, 10), page: 0});
     };
-    debugger
+
     return (
         <Paper className="mb4">
             <TableContainer style={{maxHeight: 1200}}>

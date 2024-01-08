@@ -16,6 +16,7 @@ export function Filters() {
 
 
     useEffect(() => {
+        debugger
         let check = false;
         let Cameras2 = [];
         for(let i=0; i < availCameras.length; i++){
@@ -30,7 +31,8 @@ export function Filters() {
                     })
                     }
                 }
-            if(check == false && Cameras2.length < 7){
+            debugger
+            if(check == false && ![13, 14, 15, 16, 17].includes(availCameras[i]['id'])){
                 Cameras2.push({
                         id: availCameras[i]['id'],
                         description: availCameras[i]["description"]
