@@ -23,6 +23,9 @@ export default function TopAppBar(){
                     <Link to="/" className="mdc-top-app-bar__title">
                         <img width='120' src={require("../../images/LUMS.png")} alt="Project Logo"/>
                     </Link>
+                    <Link to="/" className="mdc-top-app-bar__title">
+                        <img width='50' src={require("../../images/wwf_logo.png")} alt="Project Logo"/>
+                    </Link>
                 </section>
                 <section className="mdc-top-app-bar__section app-shop mdc-top-app-bar__section--align-end mr4"
                          role="toolbar">

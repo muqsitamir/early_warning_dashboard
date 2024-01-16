@@ -82,11 +82,11 @@ export function EventsTable() {
       return;
     }
     setSelected([]);
-    debugger
+    
     dispatch(resetEvents());
-    debugger
+    
     showChanges(true);
-    debugger
+    
   }, [rowsPerPage]);
 
   useEffect(() => {

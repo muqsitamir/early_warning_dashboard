@@ -44,7 +44,7 @@ let location='Lat:'+content.latitude+' ,Lng:'+content.longitude;
       
         return formattedDate;
       } 
-      debugger
+      
    return(
        <div className="card rounded my-3 shadow-lg back-card" style={{width:"230px",margin:'10px',height:"fit-content",maxHeight: '460px'}}>
         <Typography variant="subtitle2" gutterBottom component="div" marginTop={1} marginLeft={2} style={{display: 'inline-flex',
