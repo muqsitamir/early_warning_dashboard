@@ -41,9 +41,10 @@ export const getEvents =
     let cameras_selected = filters.cameras.join(",");
     let species_selected = filters.species.join(",");
     let eventStatus = status ? `&status=${status}` : "";
+    debugger;
     axios
       .get(
-        `${backend_url}/core/api/event/?datetime_after=${result.start}&datetime_before=${result.end}&cameras=${cameras_selected}&species=${species_selected}&page=${page}&page_size=${rowsPerPage}${eventStatus}`,
+        `${backend_url}/core/api/event/?date_gte=${result.start.split("T")[0]}&date_lte=${result.end.split("T")[0]}&cameras=${cameras_selected}&species=${species_selected}&page=${page}&page_size=${rowsPerPage}${eventStatus}`,
         config
       )
       .then((res) => {
