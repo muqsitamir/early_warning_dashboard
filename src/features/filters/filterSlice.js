@@ -35,7 +35,6 @@ export const filterSlice = createSlice({
           action.payload.push(merged_ids[1]);
         }
       }
-      debugger;
       state.cameras = action.payload;
     },
     setSpecies: (state, action) => {
