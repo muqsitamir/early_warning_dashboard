@@ -10,6 +10,9 @@ export default function TopAppBar(){
         dispatch(showSideNav());
     }
 */
+var user=JSON.parse(localStorage['user'])
+console.log("organization: "+user.organization )
+var organization=user.organization;
     const handle_camera_click = () => {
         window.location = '/cameras';
     }
@@ -41,12 +44,12 @@ export default function TopAppBar(){
                             <span className="mdc-button__label">Cameras</span>
                         </button>
                     {/*</Link>*/}
-                    <a href="https://api.tpilums.org.pk/admin" className="show-lg link-mute">
+                    {organization==="CVGL"&&(<a href="https://api.tpilums.org.pk/admin" className="show-lg link-mute">
                         <button className="mdc-button mdc-theme--primary mdc-top-app-bar__action-item">
                             <span className="mdc-button__ripple"/>
                             <span className="mdc-button__label">Admin</span>
                         </button>
-                    </a>
+                    </a>)}
                     <a href="/logout" className="show-lg link-mute">
                         <button className="mdc-button mdc-theme--primary mdc-top-app-bar__action-item">
                             <span className="mdc-button__ripple"/>
