@@ -9,9 +9,7 @@ export default function TopAppBar(){
     /*const handle_side_nav = () => {
         dispatch(showSideNav());
     }
-*/  var user=JSON.parse(localStorage['user'])
-console.log("organization: "+user.organization )
-var organization=user.organization;
+*/
     const handle_camera_click = () => {
         window.location = '/cameras';
     }
