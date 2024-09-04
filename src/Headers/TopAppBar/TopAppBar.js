@@ -41,12 +41,12 @@ export default function TopAppBar(){
                             <span className="mdc-button__label">Cameras</span>
                         </button>
                     {/*</Link>*/}
-                    {organization==="CVGL"&&(<a href="https://api.tpilums.org.pk/admin" className="show-lg link-mute">
+                    <a href="https://api.tpilums.org.pk/admin" className="show-lg link-mute">
                         <button className="mdc-button mdc-theme--primary mdc-top-app-bar__action-item">
                             <span className="mdc-button__ripple"/>
                             <span className="mdc-button__label">Admin</span>
                         </button>
-                    </a>)}
+                    </a>
                     <a href="/logout" className="show-lg link-mute">
                         <button className="mdc-button mdc-theme--primary mdc-top-app-bar__action-item">
                             <span className="mdc-button__ripple"/>

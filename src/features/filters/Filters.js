@@ -19,8 +19,12 @@ export function Filters() {
         let check = false;
         let Cameras2 = [];
         for(let i=0; i < availCameras.length; i++){
-            for(let j=0; j < availCameras.length; j++) {
-                if (availCameras[i]['description'].slice(5,) == availCameras[j]['description']){
+            /*for(let j=0; j < availCameras.length; j++) {
+                
+                console.log(availCameras[i].description+" is live or not: "+availCameras[i]["live"])
+                if(availCameras[i]["live"]==true){
+                    
+               /* if (availCameras[i]['description'].slice(5,) == availCameras[j]['description']){
                     if(check != true){
                         check = true;
                     }
@@ -30,17 +34,26 @@ export function Filters() {
                     })
                     }
                 }
+                }*/
             if(check == false && ![13, 14, 15, 16, 17].includes(availCameras[i]['id'])){
+                if(availCameras[i]["live"]==true){
                 Cameras2.push({
                         id: availCameras[i]['id'],
                         description: availCameras[i]["description"]
                 })
+            }
+                }else{
+                    if(availCameras[i]["live"]==true){
+                        Cameras2.push({
+                                id: availCameras[i]['id'],
+                                description: availCameras[i]["description"]
+                        })
+                    }  
                 }
             check = false;
             }
         setAvailCameras2(Cameras2);
     }, [availCameras]);
-
     const cameraItems = availCameras2.map((v,i)=>({key:v.id,value:v.description}));
     const [state, setState] = useState({open: false});
     const speciesItems = availSpecies.map((v,i)=>({key:v.id,value:v.name}));

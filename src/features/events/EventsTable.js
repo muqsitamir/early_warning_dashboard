@@ -317,6 +317,11 @@ export function EventsTable() {
             <TableBody>
               {(rowsPerPage > 0 ? events.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage) : events).map((row) => {
                 // debugger;
+                const animalSpecies = ["animal", "black bear", "coyote", "fire", "leopard", "other_animals", "spiderweb"];
+                const excludedTags = ["Daytime false", "false", "fire", "rain"];
+
+                const hasAnimal = row.species.some(item => animalSpecies.includes(item.name.toLowerCase()));
+
                 return (
                   <TableRow key={row.uuid}>
                     <TableCell>
@@ -338,9 +343,27 @@ export function EventsTable() {
                       </a>
                     </TableCell>
                     <TableCell>
-                      {row.species.map((item) => (
-                        <Chip className="mr1" style={{ backgroundColor: item.color }} color="primary" key={item.key} label={item.name} />
-                      ))}
+                    
+                  {hasAnimal ? (
+                 <Chip 
+                 className="mr1"
+                 style={{ backgroundColor: 'desiredColorForAnimalTag' }}
+                 color="primary"
+                 label="Animal"
+                 />
+                 ) : (
+  row.species.map((item) => (
+    !excludedTags.includes(item.name) && !animalSpecies.includes(item.name.toLowerCase()) && (
+      <Chip
+        className="mr1"
+        style={{ backgroundColor: item.color }}
+        color="primary"
+        key={item.key}
+        label={item.name}
+      />
+    )
+  ))
+)}
                     </TableCell>
                     <TableCell>{row.created_at}</TableCell>
                     <TableCell>{row.confidence}</TableCell>
