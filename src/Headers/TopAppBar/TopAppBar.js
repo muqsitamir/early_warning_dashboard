@@ -13,7 +13,9 @@ export default function TopAppBar(){
     const handle_camera_click = () => {
         window.location = '/cameras';
     }
-
+ const handle_profile_click=()=>{
+    window.location="/profile";
+ }
     return (
         <header  style={{ background: 'white' }} className="mdc-top-app-bar mdc-top-app-bar--shadow__ mdc-top-app-bar--fixed js-top-app-bar"
                 data-mdc-auto-init="MDCTopAppBar">
@@ -40,7 +42,12 @@ export default function TopAppBar(){
                             <span className="mdc-button__ripple"/>
                             <span className="mdc-button__label">Cameras</span>
                         </button>
+
                     {/*</Link>*/}
+                    <button className="mdc-button mdc-theme--primary mdc-top-app-bar__action-item" onClick={handle_profile_click}>
+                            <span className="mdc-button__ripple"/>
+                            <span className="mdc-button__label">Profile</span>
+                        </button>
                     <a href="https://api.tpilums.org.pk/admin" className="show-lg link-mute">
                         <button className="mdc-button mdc-theme--primary mdc-top-app-bar__action-item">
                             <span className="mdc-button__ripple"/>

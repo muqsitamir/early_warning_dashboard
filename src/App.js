@@ -16,6 +16,7 @@ import ReactSpinner from "./reusable_components/ReactSpinner";
 import Cameras from "./pages/Cameras";
 import OnlyPublicRoute from "./Authentication/OnlyPublicRoute";
 import CameraDetailsPage from './pages/CameraDetailsPage';
+import Profile from './pages/Profile'
 export const backend_url = 'https://api.tpilums.org.pk'
 // export const backend_url = 'http://0.0.0.0:8000'
 export const googleMapsApiKey='AIzaSyBup6K7zk3Hp7u53HmAVCMwqeEfFCEf70Q';
@@ -29,6 +30,7 @@ export default function App () {
                 <Switch>
                 <ProtectedRoute exact path='/' Component={Home} />
                 <ProtectedRoute exact path='/cameras' Component={Cameras} />
+                <ProtectedRoute exact path='/profile' Component={Profile}/>
                 <ProtectedRoute exact path='/statistics/:id' Component={CameraDetailsPage} />
                 <OnlyPublicRoute exact path='/login' Component={Login} />
                 <Route exact path='/logout' render={(props) => <Logout {...props}/>}/>
