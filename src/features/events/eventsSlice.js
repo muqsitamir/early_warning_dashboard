@@ -55,7 +55,7 @@ const  endDatefilter=adjustedEndyear+"-"+adjustedEndmonth+"-"+adjustedEndDate;
 // Log the results
 console.log("end date before:", result.end.split("T")[0]);
 console.log("end date after:", endDatefilter);
-    debugger;
+    //debugger;
     axios
       .get(
         `${backend_url}/core/api/event/?date_gte=${result.start.split("T")[0]}&date_lte=${endDatefilter}&cameras=${cameras_selected}&species=${species_selected}&page=${page}&page_size=${rowsPerPage}${eventStatus}`,
@@ -63,6 +63,7 @@ console.log("end date after:", endDatefilter);
       )
       .then((res) => {
         res.data["filterApplied"] = filterApplied;
+        console.log(res.data)
         dispatch(setEvents(res.data));
       })
       .catch((err) => {
@@ -108,7 +109,7 @@ export const deleteEvent = (eventIds) => (dispatch, getState) => {
   const data = {
     events: eventIds,
   };
-
+console.log("del data "+data)
   axios
     .post(`${backend_url}/core/api/event/delete_events/`, data, config)
     .then((res) => {

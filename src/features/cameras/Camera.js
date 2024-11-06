@@ -56,7 +56,10 @@ let location='Lat:'+content.latitude+' ,Lng:'+content.longitude;
                 </div>
                 <span>{content.description}</span>                
                 </Typography>
-                <Typography  style={{borderTop:'groove',borderBottom:'groove',display:'flex',justifyContent:'center',marginBottom:'5px'}}><span  style={{fontSize:'12px'}}>{getDate(content.created_at)}</span>   </Typography>               
+                <Typography  style={{borderTop:'groove',borderBottom:'groove',display:'flex',justifyContent:'center',marginBottom:'5px'}}>
+                  <span  style={{fontSize:'12px'}}>Created At: {getDate(content.created_at)}</span>   </Typography>   
+                  <Typography  style={{borderTop:'groove',borderBottom:'groove',display:'flex',justifyContent:'center',marginBottom:'5px'}}>
+                  <span  style={{fontSize:'12px'}}>Updated At: {getDate(content.last_reported_at)}</span>   </Typography>            
                <div style={{display: 'flex',alignItems: 'center', justifyContent: 'center'}}>
   <img
     src={latest}

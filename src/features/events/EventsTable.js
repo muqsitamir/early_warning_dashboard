@@ -29,6 +29,8 @@ import StarIcon from "@mui/icons-material/Star";
 import UnarchiveIcon from "@mui/icons-material/Unarchive";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useDispatch, useSelector } from "react-redux";
+import { backend_url } from '../../App';  
+import axios from 'axios';
 import {
   getEvents,
   selectEvents,
@@ -60,7 +62,9 @@ export function EventsTable() {
   const filters = useSelector(selectFilters);
   const dispatch = useDispatch();
   const isFirstRun = useRef(true);
-
+  const[countR,setCount]=useState(0)
+  const [requests,setRequests]=useState([]);
+  const [requestsPage, setRequestsPage] = useState(0);
   const status = (tab) => {
     switch (tab) {
       case 0:
@@ -69,6 +73,8 @@ export function EventsTable() {
         return "ARCHIVED";
       case 2:
         return "FEATURED";
+      case 3:
+        return "REQUETS"
       default:
         return "NONE";
     }
@@ -98,7 +104,10 @@ export function EventsTable() {
       justRan.current = false;
       return;
     }
-    dispatch(getEvents(state.page + 1, filters.filterApplied, status(tab), rowsPerPage));
+    if(tab===3){
+      dispatch(getEvents(state.page + 1, filters.filterApplied, status(0), rowsPerPage));
+    }else{
+    dispatch(getEvents(state.page + 1, filters.filterApplied, status(tab), rowsPerPage));}
     justRan.current = true;
     let check = filters.filterApplied ? false : filters.filterApplied;
     dispatch(setFilterApplied(check));
@@ -113,7 +122,9 @@ export function EventsTable() {
       setReload(true)
     }
   }, [tab]);
-
+  useEffect(() => {
+    fetchRequest();
+  }, [tab,requestsPage]);
 
   useEffect(() => {
     if(selectMode == false){
@@ -130,8 +141,10 @@ export function EventsTable() {
       }
       await new Promise((resolve) => setTimeout(resolve, 1000));
     }
-    debugger
-    dispatch(getEvents(state.page + 1, filters.filterApplied, status(tab), rowsPerPage));
+    if(tab===3){
+      dispatch(getEvents(state.page + 1, filters.filterApplied, status(0), rowsPerPage));
+    }else{
+    dispatch(getEvents(state.page + 1, filters.filterApplied, status(tab), rowsPerPage));}
   };
 
   const reloadEvents = (pageSize = 10) => {
@@ -143,9 +156,16 @@ export function EventsTable() {
   };
 
   const handleChangePage = (event, newPage) => {
-    if (newPage > state.page && newPage + 1 > events.length/rowsPerPage) dispatch(getEvents(newPage + 1, filters.filterApplied, status(tab), rowsPerPage));
-    setState({ page: newPage, rowsPerPage: state.rowsPerPage });
-    setSelected([]);
+    if(tab!==3){
+      if (newPage > state.page && newPage + 1 > events.length/rowsPerPage) dispatch(getEvents(newPage + 1, filters.filterApplied, status(tab), rowsPerPage));
+      setState({ page: newPage, rowsPerPage: state.rowsPerPage });
+    }else {
+      // For requests pagination (when tab === 3)
+      if (newPage > requestsPage && newPage + 1 > requests.length / rowsPerPage) {
+        fetchRequest(newPage + 1); // Fetch requests with updated page number
+      }
+      setRequestsPage(newPage); // Update requests page state
+    }
   };
 
   const handleChangeRowsPerPage = (event) => {
@@ -196,7 +216,82 @@ export function EventsTable() {
     setSelected([]);
     showChanges();
   }
-
+  const modifyRequest = async (eventId, status) => {
+    try {
+      const token = localStorage.getItem('token');
+      
+     
+      if (!token) {
+        throw new Error('User is not authenticated');
+      }
+  
+      const config = {
+        headers: {
+          Authorization: `Token ${token}`,
+          'Content-Type': 'application/json',
+        },
+      };
+  
+      const requestData = {
+        id: eventId,  // Use the correct key expected by your backend
+        request_status: status,
+        request_type: "DELETE",
+        
+    
+      };
+  
+      const response = await axios.put(`${backend_url}/core/api/request/`, requestData, config);
+  
+      // Handle success
+      console.log('Request updated:', response.data);
+      setRequests([])
+      // After modifying the request, call fetchRequest to update the list
+     
+  
+      return response.data; // Return the response in case it's needed elsewhere
+  
+    } catch (error) {
+      // Handle errors - either show a notification or log it
+      console.error('Error updating request:', error);
+      throw error;
+    }
+  };
+  
+  const fetchRequest = async () => {
+    const token = localStorage.getItem('token');
+  
+    if (!token) {
+      throw new Error('User is not authenticated');
+    }
+  
+    const config = {
+      headers: {
+        Authorization: `Token ${token}`,
+      },
+    };
+  
+    try {
+      let response = await axios.get(`${backend_url}/core/api/request/?page=${requestsPage+1}&page_size=${rowsPerPage}`, config);
+      console.log(response.data);
+      
+      // Update the requests state
+      setRequests(response.data.results);
+      setCount(response.data.count);
+    } catch (error) {
+      console.error('Error fetching requests:', error);
+    }
+  };
+  const formatDateTime = (dateString) => {
+    const date = new Date(dateString);
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are zero-indexed
+    const year = date.getFullYear();
+    const hours = String(date.getHours()).padStart(2, '0');
+    const minutes = String(date.getMinutes()).padStart(2, '0');
+    const seconds = String(date.getSeconds()).padStart(2, '0');
+  
+    return `${day}-${month}-${year} ${hours}:${minutes}:${seconds}`;
+  };
   return (
     <Paper className="mb4">
       <Dialog
@@ -264,7 +359,8 @@ export function EventsTable() {
             <Tab label="All" />
             <Tab label="Archived" />
             <Tab label="Featured" />
-            <Button onClick={()=>setSelectMode(!selectMode)} variant="text" sx={{ position: 'absolute', right: 45, top: 5 }}>Select</Button>
+            <Tab label="Requets" />
+            {tab!==3?(<Button onClick={()=>setSelectMode(!selectMode)} variant="text" sx={{ position: 'absolute', right: 45, top: 5 }}>Select</Button>):''}
             {listView ? <GridViewIcon sx={{ position: 'absolute', right: 15, top: 12, color: "#1a76d2", '&:hover': {boxShadow: '0 0 5px 2px skyblue'} }} onClick={() => setListView(!listView)} /> : <ReorderIcon sx={{ position: 'absolute', right: 15, top: 12, color: "#1a76d2", '&:hover': {boxShadow: '0 0 5px 2px skyblue'} }} onClick={() => setListView(!listView)}/>}
           </Tabs>
           {selected.length > 0 && (
@@ -290,32 +386,84 @@ export function EventsTable() {
              // List View
           (<Table size="small" stickyHeader aria-label="sticky table">
           <TableHead>
-            <TableRow>
-              <TableCell>
-                {selectMode ? (
-                <Checkbox
-                  checked={events
-                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                    .map((event) => event.uuid)
-                    .every((item) => selected.includes(item))}
-                  onChange={() => {
-                    if (selected.length === rowsPerPage) setSelected([]);
-                    else setSelected(events.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((event) => event.uuid));
-                  }}
-                /> ) : null}
-              </TableCell>
-              <TableCell>Event</TableCell>
-              <TableCell>Specie</TableCell>
-              <TableCell>Created At</TableCell>
-              <TableCell>Confidence</TableCell>
-              <TableCell>Date</TableCell>
-              <TableCell>Camera</TableCell>
-            </TableRow>
+          {tab===3?(
+                  <TableRow>
+                   <TableCell>Event</TableCell>
+                  <TableCell>Specie</TableCell>
+                  <TableCell>Status</TableCell>
+                  <TableCell>type</TableCell>
+                  <TableCell>Created At</TableCell>
+                  <TableCell>Updated At</TableCell>
+                  <TableCell>Action</TableCell>
+                </TableRow>):(
+                  <TableRow>
+                  <TableCell>
+                    {selectMode ? (
+                    <Checkbox
+                      checked={events
+                        .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                        .map((event) => event.uuid)
+                        .every((item) => selected.includes(item))}
+                      onChange={() => {
+                        if (selected.length === rowsPerPage) setSelected([]);
+                        else setSelected(events.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((event) => event.uuid));
+                      }}
+                    /> ) : null}
+                  </TableCell>
+                  <TableCell>Event</TableCell>
+                  <TableCell>Specie</TableCell>
+                  <TableCell>Created At</TableCell>
+                  <TableCell>Confidence</TableCell>
+                  <TableCell>Date</TableCell>
+                  <TableCell>Camera</TableCell>
+                </TableRow>
+                )}
+            
           </TableHead>
-
-          {events.length !== 0 ? (
-            <TableBody>
-              {(rowsPerPage > 0 ? events.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage) : events).map((row) => {
+            {tab===3?(<TableBody>
+ {requests.length !== 0 ? (
+   requests.map((row) => {
+     
+     return  ( 
+       <TableRow key={row.id}>
+         <TableCell>
+           <a target="_blank" rel="noopener noreferrer" href={row.thumbnail}>
+             <img src={row.thumbnail} height={80} alt="" />
+           </a>
+         </TableCell>
+         <TableCell>
+         {row.species.map((item) => (
+              <Chip
+                className="mr1"
+                style={{ backgroundColor: item.color }}
+                color="primary"
+                key={item.key}
+                label={item.name}
+              />
+            ))}
+         </TableCell>
+         <TableCell>{row.request_status}</TableCell>
+         <TableCell>{row.request_type}</TableCell>
+         <TableCell>{formatDateTime(row.created_at)}</TableCell>
+<TableCell>{formatDateTime(row.updated_at)}</TableCell>
+         {row.request_status==="PENDING"?(<TableCell>
+     <Button onClick={() => modifyRequest(row.id, 'APPROVED')}>APPROVE</Button>
+  <Button onClick={() => modifyRequest(row.id, 'REJECTED')}>REJECT</Button>
+</TableCell>):(<TableCell>
+     <Button disabled onClick={() => modifyRequest(row.id, 'APPROVED')}>APPROVE</Button>
+  <Button disabled onClick={() => modifyRequest(row.id, 'REJECTED')}>REJECT</Button>
+</TableCell>)}
+         
+       </TableRow>
+     
+    ) })
+ ) : (
+   <div className="container tc">Loading Data....</div>
+ )}
+</TableBody>):( <TableBody>
+  {events.length !== 0 ? (
+           
+              (rowsPerPage > 0 ? events.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage) : events).map((row) => {
                 // debugger;
                 const animalSpecies = ["animal", "black bear", "coyote", "fire", "leopard", "other_animals", "spiderweb"];
                 const excludedTags = ["Daytime false", "false", "fire", "rain"];
@@ -338,10 +486,18 @@ export function EventsTable() {
                       /> ) : null}
                     </TableCell>
                     <TableCell>
-                      <a target="_blank" href={row.file}>
-                        <img src={row.thumbnail} height={80} />
-                      </a>
-                    </TableCell>
+  <a 
+    target="_blank" 
+    rel="noopener noreferrer" 
+    href={row.thumbnail.replace("http://127.0.0.1:8000", "https://api.tpilums.org.pk")}
+  >
+    <img 
+      src={row.thumbnail.replace("http://127.0.0.1:8000", "https://api.tpilums.org.pk")} 
+      height={80} 
+      alt="" 
+    />
+  </a>
+</TableCell>
                     <TableCell>
                     
                   {hasAnimal ? (
@@ -352,30 +508,27 @@ export function EventsTable() {
                  label="Animal"
                  />
                  ) : (
-  row.species.map((item) => (
-    !excludedTags.includes(item.name) && !animalSpecies.includes(item.name.toLowerCase()) && (
-      <Chip
-        className="mr1"
-        style={{ backgroundColor: item.color }}
-        color="primary"
-        key={item.key}
-        label={item.name}
-      />
-    )
-  ))
-)}
+                 row.species.map((item) => (
+                 !excludedTags.includes(item.name) && !animalSpecies.includes(item.name.toLowerCase()) && (
+                 <Chip
+                 className="mr1"
+                   style={{ backgroundColor: item.color }}
+                  color="primary"
+                  key={item.key}
+                  label={item.name} /> ))))}
                     </TableCell>
                     <TableCell>{row.created_at}</TableCell>
-                    <TableCell>{row.confidence}</TableCell>
+                    <TableCell>{row.confidence.toFixed(2)}</TableCell>
                     <TableCell>{row.date}</TableCell>
                     <TableCell>{row.camera_name}</TableCell>
                   </TableRow>
                 );
-              })}
-            </TableBody>
+              })
           ) : (
             <div className="container tc">Loading Data....</div>
           )}
+       </TableBody> )}
+          
         </Table>)
             :
         (
@@ -422,9 +575,9 @@ export function EventsTable() {
       <TablePagination
         rowsPerPageOptions={[10, 20, 50, 100]}
         component="div"
-        count={count !== null ? count : "loading..."}
+        count={tab === 3 ? (countR !== null ? countR : "loading...") : (count !== null ? count : "loading...")}
         rowsPerPage={rowsPerPage}
-        page={page}
+        page={tab === 3?requestsPage:page}
         onRowsPerPageChange={handleChangeRowsPerPage}
         onPageChange={handleChangePage}
         showFirstButton
