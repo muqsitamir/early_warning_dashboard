@@ -489,7 +489,7 @@ export function EventsTable() {
   <a 
     target="_blank" 
     rel="noopener noreferrer" 
-    href={row.thumbnail.replace("http://127.0.0.1:8000", "https://api.tpilums.org.pk")}
+    href={row.file.replace("http://127.0.0.1:8000", "https://api.tpilums.org.pk")}
   >
     <img 
       src={row.thumbnail.replace("http://127.0.0.1:8000", "https://api.tpilums.org.pk")} 
