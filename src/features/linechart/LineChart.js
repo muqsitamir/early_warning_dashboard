@@ -27,6 +27,28 @@ export function LineChart() {
                 data={line_chart}
                 type="line"
                 options={{
+                    interaction: {
+                        mode: 'index',
+                        intersect: false,
+                    },
+                    stacked: false,
+                    scales: {
+                      y: {
+                        type: 'linear',
+                        display: true,
+                        position: 'left',
+                      },
+                      y1: {
+                        type: 'linear',
+                        display: true,
+                        position: 'right',
+
+                        // grid line settings
+                        grid: {
+                          drawOnChartArea: true, // only want the grid lines for one axis to show up
+                        },
+                      },
+                    },
                     responsive: true,
                     plugins: {
                         legend: {
@@ -34,7 +56,7 @@ export function LineChart() {
                         },
                         title: {
                             display: false,
-                            text: 'Chart.js Line Chart'
+                            text: 'Chart.js Line Chart - Multi Axis'
                         }
                     }
                 }}
