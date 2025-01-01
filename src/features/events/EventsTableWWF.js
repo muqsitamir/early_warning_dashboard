@@ -53,6 +53,7 @@ export function EventsTableWWF(){
     const [selectedAnnotations, setSelectedAnnotations] = useState([]);
     const [requests,setRequests]=useState([])
     const user=JSON.parse(localStorage['user']);
+    const loggedInUserId=user.id;
     const can_annotate=user.can_annotate;
     const can_unannotate=user.can_unannotate;
     const can_feature=user.can_feature;
@@ -479,7 +480,14 @@ export function EventsTableWWF(){
 ) : (
   <TableBody>
     {events.length !== 0 ? (
-  (rowsPerPage > 0 ? events.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage) : events).map((row) => {
+  (rowsPerPage > 0 
+    ? events.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage) 
+    : events
+  )
+  .filter(row => 
+    row.species.some(specie => specie.users.includes(loggedInUserId)) // Filter events based on user
+  )
+  .map((row)  => {
     const animalSpecies = ["animal", "black bear", "coyote", "fire", "leopard", "other_animals", "spiderweb"];
     const excludedTags = ["Daytime false", "false", "fire", "rain"];
 
