@@ -74,7 +74,7 @@ export function EventsTable() {
       case 2:
         return "FEATURED";
       case 3:
-        return "REQUETS"
+        return "REQUESTS"
       default:
         return "NONE";
     }
