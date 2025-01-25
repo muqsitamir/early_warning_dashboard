@@ -1,8 +1,6 @@
 import React from 'react';
 import {Redirect, Route, Switch} from "react-router-dom"
-// import Register from "../components/Authentication/register";
-// import NewPassword from "../components/Authentication/newPassword";
-// import ResendPassword from "../components/Authentication/resendPassword";
+
 import MessageSnackbar from "./reusable_components/SnackBar";
 import ResetPassword from "./Authentication/ResetPassword";
 import Home from "./pages/Home";
