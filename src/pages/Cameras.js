@@ -5,18 +5,48 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getCameras, selectCameras } from '../features/cameras/cameraSlice';
 import MiniMap from './MiniMap';
 import {Button,Dialog,Select,Tabs,Tab,DialogTitle} from "@mui/material";
+import {backend_url} from "../App";
+
+
 export default function Cameras() {
   const dispatch = useDispatch();
-  
+  const { results: cameras } = useSelector(selectCameras);
+  const [stream, setStream] = useState(cameras)
+
   useEffect(() => {
-    dispatch(getCameras());
+    const fetchCameras = async () => {
+        try {
+          const response = await fetch(`${backend_url}/core/api/sse/cameras`, {
+            method: 'GET',
+            headers: {
+              'Accept': 'application/json',
+              'Authorization': `Token ${localStorage.getItem("token")}`
+            },
+          });
+
+          if (response.ok) {
+            const updatedCameras = await response.json();
+            setStream(updatedCameras);
+          } else {
+            console.error('Failed to fetch cameras:', response.statusText);
+          }
+        } catch (error) {
+          console.error('Error fetching cameras:', error);
+        }
+      };
+
+    fetchCameras();
+
+    // Set up the interval to load updated cameras
+    const intervalId = setInterval(fetchCameras, 15000);
+
+    return () => clearInterval(intervalId);
   }, [dispatch]);
-  
+
   const user = JSON.parse(localStorage['user']);
   console.log("organization: " + user.organization);
   const organization = user.organization;
-  
-  const { results: cameras } = useSelector(selectCameras);
+
   let location = { lat: 33.734457, lng: 73.045045 };
   
   const [center, setCenter] = useState({ center: location, zoom: 5 });
@@ -75,7 +105,7 @@ export default function Cameras() {
 
   // Updated Filtering Function
   const getFilteredCameras = () => {
-    let filteredCameras = cameras;
+    let filteredCameras = stream;
 
     // Apply the organization filter
     if (organization === 'wwf') {

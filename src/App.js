@@ -1,6 +1,5 @@
 import React from 'react';
 import {Redirect, Route, Switch} from "react-router-dom"
-
 import MessageSnackbar from "./reusable_components/SnackBar";
 import ResetPassword from "./Authentication/ResetPassword";
 import Home from "./pages/Home";
@@ -15,8 +14,9 @@ import Cameras from "./pages/Cameras";
 import OnlyPublicRoute from "./Authentication/OnlyPublicRoute";
 import CameraDetailsPage from './pages/CameraDetailsPage';
 import Profile from './pages/Profile'
+
 export const backend_url = 'https://api.tpilums.org.pk'
- //export const backend_url = 'http://127.0.0.1:8000'
+// export const backend_url = 'http://0.0.0.0:8000'
 export const googleMapsApiKey='AIzaSyBup6K7zk3Hp7u53HmAVCMwqeEfFCEf70Q';
 
 
