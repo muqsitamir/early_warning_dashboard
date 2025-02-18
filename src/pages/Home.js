@@ -4,12 +4,10 @@ import { Filters } from "../features/filters/Filters";
 import { useDispatch, useSelector } from "react-redux";
 import {getOrganization, selectOrganization} from "../features/organization/organizationSlice";
 import { EventsTable } from "../features/events/EventsTable";
-
 import { LineChart } from "../features/linechart/LineChart";
 import { PieChart } from "../features/piechart/PieChart";
 import { Maps } from "../features/maps/Maps";
 import {EventsTableWWF} from "../features/events/EventsTableWWF";
-//import {selectFilters} from "../features/filters/filterSlice";
 
 export default function Home() {
   const dispatch = useDispatch();
@@ -79,17 +77,7 @@ export default function Home() {
                   <Filters />
                 </div>
               </div>
-              
-              {/*<EventsTable />*/}
-              
               {event_component}
-              {/*{/<div className="row">/}*/}
-              {/*/!*    <div className="col s12">*!/*/}
-              {/*/!*        <h1 className="bold pb2">Loreum Ipsum</h1>*!/*/}
-              {/*/!*    </div>*!/*/}
-              {/*{/</div>/}*/}
-
-              {/*</div>*/}
             </div>
           </div>
         </div>

@@ -1,7 +1,6 @@
 import React, {useEffect, useState, useRef} from "react";
 import {
     Box,
-    Button, Checkbox,
     Chip, Grid,
     Paper, Tab,
     Table,
@@ -17,10 +16,7 @@ import {getEvents, resetEvents, selectEvents} from "./eventsSlice";
 import {selectFilters, setFilterApplied} from "../filters/filterSlice";
 import GridViewIcon from "@mui/icons-material/GridView";
 import ReorderIcon from "@mui/icons-material/Reorder";
-import UnarchiveIcon from "@mui/icons-material/Unarchive";
-import ArchiveIcon from "@mui/icons-material/Archive";
-import StarIcon from "@mui/icons-material/Star";
-import DeleteIcon from "@mui/icons-material/Delete";
+
 
 export function EventsTableWWF(){
     const [listView, setListView] = useState(true);

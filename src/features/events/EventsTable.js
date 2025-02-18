@@ -359,7 +359,7 @@ export function EventsTable() {
             <Tab label="All" />
             <Tab label="Archived" />
             <Tab label="Featured" />
-            <Tab label="Requets" />
+            <Tab label="Request" />
             {tab!==3?(<Button onClick={()=>setSelectMode(!selectMode)} variant="text" sx={{ position: 'absolute', right: 45, top: 5 }}>Select</Button>):''}
             {listView ? <GridViewIcon sx={{ position: 'absolute', right: 15, top: 12, color: "#1a76d2", '&:hover': {boxShadow: '0 0 5px 2px skyblue'} }} onClick={() => setListView(!listView)} /> : <ReorderIcon sx={{ position: 'absolute', right: 15, top: 12, color: "#1a76d2", '&:hover': {boxShadow: '0 0 5px 2px skyblue'} }} onClick={() => setListView(!listView)}/>}
           </Tabs>
@@ -462,13 +462,8 @@ export function EventsTable() {
  )}
 </TableBody>):( <TableBody>
   {events.length !== 0 ? (
-           
-              (rowsPerPage > 0 ? events.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage) : events).map((row) => {
-                // debugger;
-                const animalSpecies = ["animal", "black bear", "coyote", "fire", "leopard", "other_animals", "spiderweb"];
-                const excludedTags = ["Daytime false", "false", "fire", "rain"];
 
-                const hasAnimal = row.species.some(item => animalSpecies.includes(item.name.toLowerCase()));
+              (rowsPerPage > 0 ? events.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage) : events).map((row) => {
 
                 return (
                   <TableRow key={row.uuid}>
@@ -489,33 +484,27 @@ export function EventsTable() {
   <a 
     target="_blank" 
     rel="noopener noreferrer" 
-    href={row.file.replace("http://127.0.0.1:8000", "https://api.tpilums.org.pk")}
+    // href={row.file.replace("http://127.0.0.1:8000", "https://api.tpilums.org.pk")}
+    href={row.file}
   >
     <img 
-      src={row.thumbnail.replace("http://127.0.0.1:8000", "https://api.tpilums.org.pk")} 
-      height={80} 
+      // src={row.thumbnail.replace("http://127.0.0.1:8000", "https://api.tpilums.org.pk")}
+      src={row.thumbnail}
+      height={80}
       alt="" 
     />
   </a>
 </TableCell>
                     <TableCell>
                     
-                  {hasAnimal ? (
-                 <Chip 
-                 className="mr1"
-                 style={{ backgroundColor: 'desiredColorForAnimalTag' }}
-                 color="primary"
-                 label="Animal"
-                 />
-                 ) : (
-                 row.species.map((item) => (
-                 !excludedTags.includes(item.name) && !animalSpecies.includes(item.name.toLowerCase()) && (
+                  {
+                 row.species.map((item) => ((
                  <Chip
                  className="mr1"
                    style={{ backgroundColor: item.color }}
                   color="primary"
                   key={item.key}
-                  label={item.name} /> ))))}
+                  label={item.name} /> )))}
                     </TableCell>
                     <TableCell>{row.created_at}</TableCell>
                     <TableCell>{row.confidence.toFixed(2)}</TableCell>
