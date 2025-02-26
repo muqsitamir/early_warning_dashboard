@@ -14,6 +14,7 @@ import Cameras from "./pages/Cameras";
 import OnlyPublicRoute from "./Authentication/OnlyPublicRoute";
 import CameraDetailsPage from './pages/CameraDetailsPage';
 import Profile from './pages/Profile'
+import NewPassword from "./pages/password_reset";
 
 export const backend_url = 'https://api.tpilums.org.pk'
 // export const backend_url = 'http://0.0.0.0:8000'
@@ -30,12 +31,10 @@ export default function App () {
                 <ProtectedRoute exact path='/cameras' Component={Cameras} />
                 <ProtectedRoute exact path='/profile' Component={Profile}/>
                 <ProtectedRoute exact path='/statistics/:id' Component={CameraDetailsPage} />
+                <OnlyPublicRoute exact path='/resetpassword/:uid/:token' Component={NewPassword} />
                 <OnlyPublicRoute exact path='/login' Component={Login} />
                 <Route exact path='/logout' render={(props) => <Logout {...props}/>}/>
                 <Route path='/reset-password' render={(props) => <ResetPassword {...props}/>}/>
-                {/*    <Route exact path='/register' render={(props) => <Register {...props}/>}/>*/}
-                {/*    <Route path='/new-password/:token' render={(props) => <NewPassword {...props}/>}/>*/}
-                {/*    <Route exact path='/resend/new-password' render={(props) => <ResendPassword {...props}/>}/>*/}
                 <Route path='/not-found' component={NotFound}/>
                 <Redirect to='/not-found'/>
                 </Switch>
