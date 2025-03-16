@@ -36,7 +36,7 @@ export default function NewPassword() {
       setSuccess(true);
       setError(null);
       dispatch(setSnackBar("Reset password link sent successfully!"));
-      setTimeout(() => history.push("/login"), 2000);
+      setTimeout(() => history.push("/"), 2000);
     } catch (err) {
       setError(err.response?.data?.error || "An error occurred");
     }
@@ -76,10 +76,7 @@ export default function NewPassword() {
             </Button>
           </form>
         )}
-        {/* Back to Login Button */}
         <Button
-          // variant="text"
-          // color="secondary"
           fullWidth
           sx={{ mt: 2 }}
           onClick={() => history.push("/")}

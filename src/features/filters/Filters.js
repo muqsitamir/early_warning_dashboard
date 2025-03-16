@@ -19,22 +19,6 @@ export function Filters() {
         let check = false;
         let Cameras2 = [];
         for(let i=0; i < availCameras.length; i++){
-            /*for(let j=0; j < availCameras.length; j++) {
-                
-                console.log(availCameras[i].description+" is live or not: "+availCameras[i]["live"])
-                if(availCameras[i]["live"]==true){
-                    
-               /* if (availCameras[i]['description'].slice(5,) == availCameras[j]['description']){
-                    if(check != true){
-                        check = true;
-                    }
-                    Cameras2.push({
-                        id: [availCameras[i]['id'], availCameras[j]['id']],
-                        description: availCameras[j]["description"]
-                    })
-                    }
-                }
-                }*/
             if(check == false && ![13, 14, 15, 16, 17].includes(availCameras[i]['id'])){
                 if(availCameras[i]["live"]==true){
                 Cameras2.push({
@@ -109,22 +93,6 @@ export function Filters() {
                 onClose={handleClose}
                 closeAfterTransition>
                         <DatePicker ranges={newRange} onChange={handleDateChange} sx={{marginBottom:0}}/>
-                         <LocalizationProvider dateAdapter={AdapterDateFns}>
-                             <Stack spacing={2}>
-                                <DesktopTimePicker
-                                  label="Start Date Time"
-                                  value={startTime}
-                                  onChange={handleStartTimeChange}
-                                  renderInput={(params) => <TextField {...params} />}
-                                />
-                                <DesktopTimePicker
-                                  label="End Date Time"
-                                  value={endTime}
-                                  onChange={handleEndTimeChange}
-                                  renderInput={(params) => <TextField sx={{height:40}} {...params} />}
-                                />
-                             </Stack>
-                         </LocalizationProvider>
                         <MultiSelect label={"Cameras"} onChange={handleCameraSelect} values={newCameras} items={cameraItems}  />
                         <MultiSelect label={"Species"} onChange={handleSpecieSelect} values={newSpecies} items={speciesItems}/>
                         <div className="center tc pv3 ph2">

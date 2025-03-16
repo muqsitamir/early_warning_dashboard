@@ -106,9 +106,11 @@ export const deleteEvent = (eventIds) => (dispatch, getState) => {
   let config = {
     headers: Header,
   };
+  debugger;
   const data = {
     events: eventIds,
   };
+
 console.log("del data "+data)
   axios
     .post(`${backend_url}/core/api/event/delete_events/`, data, config)

@@ -197,6 +197,7 @@ export function EventsTable() {
   };
 
   const handleDelete = () => {
+    debugger;
     dispatch(deleteEvent(selected));
     setShowDeleteConfirmation(false);
     setSelected([]);
