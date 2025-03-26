@@ -33,7 +33,7 @@ export const getLineChart = (start_date, end_date) => dispatch => {
     let config = {
         headers: Header,
     };
-    axios.get(`${backend_url}/core/api/box/linechart/?image__date__gte=${start_date}&image__date__lte=${end_date}`, config).then(res => {
+    axios.get(`${backend_url}/core/api/event/linechart/?image__date__gte=${start_date}&image__date__lte=${end_date}`, config).then(res => {
         dispatch(setLineChart(res.data));
 
     }).catch(err => {
