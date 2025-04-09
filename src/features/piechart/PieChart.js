@@ -12,6 +12,7 @@ export function PieChart() {
     const {pie_chart} = useSelector(selectPieChart);
     const filters = useSelector(selectFilters);
     const dispatch = useDispatch();
+
      useEffect(() => {
          let result = convert_to_request_parameters(filters.range, filters.startTime, filters.endTime)
          dispatch(getPieChart(result.start, result.end));
