@@ -130,7 +130,7 @@ export function EventsTableWWF(){
                           ))}
                         </TableCell>
                         <TableCell>{row.created_at}</TableCell>
-                        <TableCell>{row.confidence}</TableCell>
+                        <TableCell>{row.confidence.toFixed(2)}</TableCell>
                         <TableCell>{row.date}</TableCell>
                         <TableCell>{row.camera_name}</TableCell>
                       </TableRow>

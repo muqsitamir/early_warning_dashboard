@@ -354,42 +354,71 @@ export function EventsTable() {
           </Button>
         </DialogActions>
       </Dialog>
-      <TableContainer style={{ maxHeight: 1200 }}>
+      <TableContainer style={{ maxHeight: 1200, overflowX: { xs: 'auto', sm: 'unset' } }} >
         <Box sx={{ borderBottom: 1, borderColor: "divider", display: "flex" }}>
           <Tabs value={tab} onChange={(e, v) => setTab(v)} aria-label="basic tabs example" sx={{ flex: 9.3 }}>
             <Tab label="All" />
             <Tab label="Archived" />
             <Tab label="Featured" />
             <Tab label="Request" />
-            {tab!==3?(<Button onClick={()=>setSelectMode(!selectMode)} variant="text" sx={{ position: 'absolute', right: 45, top: 5 }}>Select</Button>):''}
-            {listView ? <GridViewIcon sx={{ position: 'absolute', right: 15, top: 12, color: "#1a76d2", '&:hover': {boxShadow: '0 0 5px 2px skyblue'} }} onClick={() => setListView(!listView)} /> : <ReorderIcon sx={{ position: 'absolute', right: 15, top: 12, color: "#1a76d2", '&:hover': {boxShadow: '0 0 5px 2px skyblue'} }} onClick={() => setListView(!listView)}/>}
           </Tabs>
+          <Box sx={{
+                display: 'flex',
+                gap: { xs: 1, sm: 2 },
+                alignItems: 'center',
+                flexShrink: 0,
+                ml: { xs: 1, sm: 2 },
+                whiteSpace: 'nowrap'
+              }}>
+                {tab !== 3 ? (
+                  <Button onClick={() => setSelectMode(!selectMode)} variant="text">
+                    Select
+                  </Button>
+                ) : ''}
+                {listView ? (
+                  <GridViewIcon sx={{ color: "#1a76d2", '&:hover': { boxShadow: '0 0 5px 2px skyblue' }}} onClick={() => setListView(!listView)} />
+                ) : (
+                  <ReorderIcon sx={{ color: "#1a76d2", '&:hover': { boxShadow: '0 0 5px 2px skyblue' }}} onClick={() => setListView(!listView)} />
+                )}
+          </Box>
           {selected.length > 0 && (
-            <div style={{ flex: 5.5, alignSelf: "center", display: "flex", justifyContent: "space-between", paddingRight: "3vw" }}>
-              <h6 style={{alignSelf: "center"}}>{selected.length > 0 && (`${selected.length} selected`)}</h6>
+            <Box sx={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              paddingRight: "3vw",
+              ml: 2,
+              flexShrink: 0,
+              minWidth: 'max-content'
+            }}>
+              <h6 style={{ alignSelf: "center", margin: 0 }}>{selected.length > 0 && (`${selected.length} selected`)}</h6>
               <Button
                 onClick={() => {
                   setShowAnnotateMenu(true);
                   setSelectedAnnotations([]);
                 }}
+                size="small"
               >
                 Annotations Menu
               </Button>
-              <div style={{ alignSelf: "center", flex: 0.7, display: "flex", justifyContent: "space-between" }}>
+              <Box sx={{
+                display: "flex",
+                justifyContent: "space-between",
+                minWidth: '100px', // Ensure enough space for icons
+              }}>
                 <div onClick={handleArchive}>{tab === 1 ? <UnarchiveIcon style={{ color: "red" }} /> : <ArchiveIcon />}</div>
                 <StarIcon onClick={handleStar} style={{ color: tab === 2 ? "red" : "black" }} />
                 <DeleteIcon onClick={() => setShowDeleteConfirmation(true)} style={{ color: "red" }} />
-              </div>
-            </div>
+              </Box>
+            </Box>
           )}
         </Box>
         {listView ?
-             // List View
           (<Table size="small" stickyHeader aria-label="sticky table">
           <TableHead>
           {tab===3?(
                   <TableRow>
-                   <TableCell>Event</TableCell>
+                  <TableCell>Event</TableCell>
                   <TableCell>Specie</TableCell>
                   <TableCell>Status</TableCell>
                   <TableCell>type</TableCell>
@@ -485,11 +514,9 @@ export function EventsTable() {
   <a 
     target="_blank" 
     rel="noopener noreferrer" 
-    // href={row.file.replace("http://127.0.0.1:8000", "https://api.tpilums.org.pk")}
     href={row.file}
   >
     <img 
-      // src={row.thumbnail.replace("http://127.0.0.1:8000", "https://api.tpilums.org.pk")}
       src={row.thumbnail}
       height={80}
       alt="" 
