@@ -2,10 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { Grid, MenuItem } from '@mui/material';
 import Camera from '../features/cameras/Camera';
 import { useDispatch, useSelector } from 'react-redux';
-import { getCameras, selectCameras } from '../features/cameras/cameraSlice';
-import MiniMap from './MiniMap';
+import { selectCameras } from '../features/cameras/cameraSlice';
 import {Button,Dialog,Select,Tabs,Tab,DialogTitle} from "@mui/material";
 import {backend_url} from "../App";
+import {Maps} from "../features/maps/Maps";
 
 
 export default function Cameras() {
@@ -37,19 +37,14 @@ export default function Cameras() {
 
     fetchCameras();
 
-    // Set up the interval to load updated cameras
     const intervalId = setInterval(fetchCameras, 15000);
 
     return () => clearInterval(intervalId);
   }, [dispatch]);
 
   const user = JSON.parse(localStorage['user']);
-  console.log("organization: " + user.organization);
   const organization = user.organization;
 
-  let location = { lat: 33.734457, lng: 73.045045 };
-  
-  const [center, setCenter] = useState({ center: location, zoom: 5 });
   const [showLive, setShowLive] = useState(false);
   const [showOffline, setShowOffline] = useState(false);
   const [state, setState] = useState({ open: false });
@@ -82,11 +77,6 @@ export default function Cameras() {
   const handleOfflineFilter = () => {
     setShowLive(false);
     setShowOffline(true);
-  };
-
-  const updateMapCenter = (lat, lng) => {
-    let location = { lat: lat, lng: lng };
-    setCenter({ center: location, zoom: 12 });
   };
 
   const handleClose = () => {
@@ -160,14 +150,14 @@ export default function Cameras() {
     } else {
       const gridItems = filteredCameras.map((camera, index) => (
         <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
-          <Camera content={camera} updateMapCenter={updateMapCenter} />
+          <Camera content={camera} />
         </Grid>
       ));
 
       gridItems.splice(2, 0, (
         <Grid item xs={12} sm={6} md={5} key="map">
           <div style={{ width: '100%', maxWidth: '120%', height: '270px', marginTop: "10px", marginLeft: '18px', borderRadius: '25px', overflow: 'hidden' }}>
-            <MiniMap camera={filteredCameras} defaultCenter={center} />
+              <Maps cameras={filteredCameras} />
           </div>
         </Grid>
       ));
@@ -191,9 +181,9 @@ export default function Cameras() {
                 <Tab label="Live" onClick={handleLiveFilter} />
                 <Tab label="Offline" onClick={handleOfflineFilter} />
                 {!filter ? (
-                  <Button variant="text" sx={{ position: 'absolute', right: 45, top: 5 }} onClick={handleOpen}> Filter</Button>
+                  <Button variant="text" sx={{ position: 'absolute', right: 45, top: 5 }} onClick={handleOpen}>Filter</Button>
                 ) : (
-                  <Button variant="text" sx={{ position: 'absolute', right: 45, top: 5 }} onClick={handleFilter}> Reset</Button>
+                  <Button variant="text" sx={{ position: 'absolute', right: 45, top: 5 }} onClick={handleFilter}>Reset</Button>
                 )}
               </Tabs>
               <Dialog open={state.open} onClose={handleClose} closeAfterTransition>
@@ -204,7 +194,7 @@ export default function Cameras() {
                   <MenuItem value="Khyber">Khyber</MenuItem>
                   <MenuItem value="Karimabad">Karimabad</MenuItem>
                   <MenuItem value="Bheri">Kashmir</MenuItem>
-                  <MenuItem value="HikTrap">Unnamed</MenuItem>
+                  <MenuItem value="HikTrap">HikTrap</MenuItem>
                 </Select>
               </Dialog>
             </div>

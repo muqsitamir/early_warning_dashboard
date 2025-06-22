@@ -4,7 +4,6 @@ import Typography from '@mui/material/Typography';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import LeaderboardIcon from '@mui/icons-material/Leaderboard';
 import {Button,Tooltip} from "@mui/material";
-//import CameraDetailsPage from "../../pages/CameraDetailsPage";
 import {Link} from 'react-router-dom';
 import {backend_url} from "../../App";
 
@@ -13,7 +12,8 @@ export default function Camera(props){
     let content = props.content;
     let latest = `${backend_url}/media/${props.content.latest_event}`;
     let live = content.live ? "success" : "disabled";
-let location='Lat:'+content.latitude+' ,Lng:'+content.longitude;
+    let location='Lat:'+content.latitude+' ,Lng:'+content.longitude;
+
     const getDate=(dateString)=>{
         const date = new Date(dateString);
     // Extract the time components
@@ -22,35 +22,20 @@ let location='Lat:'+content.latitude+' ,Lng:'+content.longitude;
     date.setHours(hours + 5);
     // Format the updated date and time
     const updatedDate = date.toISOString().slice(0, 16).replace("T", " ");
-    
-   // console.log("Original Date:", dateString);
-    //console.log("Updated Date:", updatedDate);
+
     return updatedDate;
-      };
+    };
       const scrollToTop = () => {
         window.scrollTo(0, 0); // Scroll to the top of the page
       };
-    const formatDate=(inputDate)=> {
-        const date = new Date(inputDate);
-        const day = date.getUTCDate();
-        const month = date.getUTCMonth() + 1; // Months are 0-based
-        const year = date.getUTCFullYear();
-        const hours = date.getUTCHours();
-        const minutes = date.getUTCMinutes();
-        const seconds = date.getUTCSeconds();
-        const timeZoneOffset = (date.getTimezoneOffset() / 60) * -1; // Convert to positive offset
-      
-        const formattedDate = `${day.toString().padStart(2, '0')}-${month.toString().padStart(2, '0')}-${year} ${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')} GMT ${timeZoneOffset > 0 ? '+' : ''}${timeZoneOffset}:00`;
-      
-        return formattedDate;
-      } 
       
    return(
        <div className="card rounded my-3 shadow-lg back-card" style={{width:"230px",margin:'10px',height:"fit-content",maxHeight: '460px'}}>
         <Typography variant="subtitle2" gutterBottom component="div" marginTop={1} marginLeft={2} style={{display: 'inline-flex',
-    marginLeft: '10px',
-    justifyContent: 'center',alignItems:'flex-start'}}>
-          
+            marginLeft: '10px',
+            justifyContent: 'center',
+            alignItems:'flex-start'}}
+        >
                 <div >
                     <FiberManualRecordIcon color={live} sx={{position: 'absolute', top:10, right:10, bottom:0 }} />
                 </div>
@@ -61,19 +46,19 @@ let location='Lat:'+content.latitude+' ,Lng:'+content.longitude;
                   <Typography  style={{borderTop:'groove',borderBottom:'groove',display:'flex',justifyContent:'center',marginBottom:'5px'}}>
                   <span  style={{fontSize:'12px'}}>Updated At: {getDate(content.last_reported_at)}</span>   </Typography>            
                <div style={{display: 'flex',alignItems: 'center', justifyContent: 'center'}}>
-  <img
-    src={latest}
-    alt=""
-    className="card-img-top time"
-    style={{
-      width: '150px',
-      height: '150px',
-      borderRadius: '15px'
-    }}
-    onError={(e) => {
-      e.target.src = '/video.png'; // Replace with the path to your black image
-    }}
-  />
+                  <img
+                    src={latest}
+                    alt=""
+                    className="card-img-top time"
+                    style={{
+                      width: '150px',
+                      height: '150px',
+                      borderRadius: '15px'
+                    }}
+                    onError={(e) => {
+                      e.target.src = '/video.png'; // Replace with the path to your black image
+                    }}
+                  />
                </div>
                
                
@@ -91,8 +76,6 @@ let location='Lat:'+content.latitude+' ,Lng:'+content.longitude;
                <LeaderboardIcon/>  Statistics
                  </Button>
                  </div>
-                
-          
         </div>
     );
 }

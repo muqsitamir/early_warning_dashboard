@@ -8,13 +8,19 @@ import { LineChart } from "../features/linechart/LineChart";
 import { PieChart } from "../features/piechart/PieChart";
 import { Maps } from "../features/maps/Maps";
 import {EventsTableWWF} from "../features/events/EventsTableWWF";
+import {getCameras, selectCameras} from "../features/cameras/cameraSlice";
 
 export default function Home() {
   const dispatch = useDispatch();
   const organization = useSelector(selectOrganization);
+  const { results: cameras } = useSelector(selectCameras);
+
   useEffect(() => {
     dispatch(getOrganization());
+    dispatch(getCameras())
   }, [dispatch]);
+
+
   const {eventComponent, setEventComponent} = useState(null);
   if(eventComponent === 'WWF'){
     setEventComponent(<EventsTableWWF/>)
@@ -37,7 +43,6 @@ export default function Home() {
                 </div>
                 
               </header>
-              {/*<div className="content">*/}
               <div className="row">
                 <div className="shadow border rounded-sm db mb1">
                   <div className="content tc">
@@ -67,7 +72,7 @@ export default function Home() {
                     <div className="content tc">
                       <div className="pa3">
                         <div className="mv3">
-                          <Maps />
+                          <Maps cameras={cameras}/>
                         </div>
                       </div>
                     </div>

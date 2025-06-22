@@ -18,7 +18,7 @@ import NewPassword from "./pages/password_reset";
 
 export const backend_url = 'https://api.tpilums.org.pk'
 // export const backend_url = 'http://0.0.0.0:8000'
-export const googleMapsApiKey='AIzaSyBup6K7zk3Hp7u53HmAVCMwqeEfFCEf70Q';
+export const googleMapsApiKey= 'AIzaSyCzaEvpRf9sblvVA18Sxe829LqnTlUyO8o';
 
 
 export default function App () {
