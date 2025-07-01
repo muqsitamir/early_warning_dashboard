@@ -55,25 +55,12 @@ function SwipeableTextMobileStepper() {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
   };
 
-  const handleStepChange = (step: number) => {
+  const handleStepChange = (step) => {
     setActiveStep(step);
   };
 
   return (
     <Box sx={{ maxWidth: 900, flexGrow: 1 }}>
-      {/*<Paper*/}
-      {/*  square*/}
-      {/*  elevation={0}*/}
-      {/*  sx={{*/}
-      {/*    display: 'flex',*/}
-      {/*    alignItems: 'center',*/}
-      {/*    height: 50,*/}
-      {/*    pl: 2,*/}
-      {/*    bgcolor: 'background.default',*/}
-      {/*  }}*/}
-      {/*>*/}
-      {/*  /!*<Typography>{props.images[activeStep].label}</Typography>*!/*/}
-      {/*</Paper>*/}
       <AutoPlaySwipeableViews
         axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
         index={activeStep}
